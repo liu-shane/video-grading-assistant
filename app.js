@@ -78,6 +78,8 @@ const DEFAULT_RUBRIC_CRITERIA = [
 const DEMO_VIDEOS = [
   {
     seq: '1',
+    studentId: 'D1120101',
+    studentName: '王曉明',
     type: 'url',
     source: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     title: '第一組（王曉明）- 你眼中的自己：從內向到熱愛攝影的蛻變',
@@ -87,10 +89,13 @@ const DEMO_VIDEOS = [
     scores: {},
     itemComments: {},
     totalScore: null,
+    summaryComment: '',
     overallComment: ''
   },
   {
     seq: '2',
+    studentId: 'D1120102',
+    studentName: '林佳穎',
     type: 'url',
     source: 'https://youtu.be/jNQXAC9IVRw',
     title: '第二組（林佳穎）- 成長軌跡與他人視角紀錄',
@@ -100,10 +105,13 @@ const DEMO_VIDEOS = [
     scores: {},
     itemComments: {},
     totalScore: null,
+    summaryComment: '',
     overallComment: ''
   },
   {
     seq: '3',
+    studentId: 'D1120103',
+    studentName: '張家豪',
     type: 'url',
     source: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ',
     title: '第三組（張家豪）- 我的成長相簿回顧',
@@ -113,6 +121,7 @@ const DEMO_VIDEOS = [
     scores: {},
     itemComments: {},
     totalScore: null,
+    summaryComment: '',
     overallComment: ''
   }
 ];
@@ -730,10 +739,25 @@ window.removeRubricCriterion = function (idx) {
 // ==========================================
 // STEP 3: 提供影片或網址清單 (單一影片 / 網址 / Excel 批次)
 // ==========================================
+function parseStudentIdAndNameFromText(str, fallbackIdx) {
+  const s = String(str || '').trim();
+  const idMatch = s.match(/\b([A-Za-z]?\d{6,10})\b/);
+  const studentId = idMatch ? idMatch[1] : `D112010${fallbackIdx}`;
+  const cleanName = s
+    .replace(studentId, '')
+    .replace(/\.[a-zA-Z0-9]+$/, '')
+    .replace(/[-_—()（）\s]+/g, ' ')
+    .trim();
+  const studentName = cleanName && cleanName.length <= 12 ? cleanName : `同學 ${fallbackIdx}`;
+  return { studentId, studentName };
+}
+
 function bindStep3Events() {
   // 方式 A：新增單一網址
   document.getElementById('btnAddSingleUrl')?.addEventListener('click', () => {
     const seqInput = document.getElementById('inputSingleId');
+    const studentIdInput = document.getElementById('inputSingleStudentId');
+    const studentNameInput = document.getElementById('inputSingleStudentName');
     const urlInput = document.getElementById('inputSingleUrl');
     const noteInput = document.getElementById('inputSingleNote');
 
@@ -744,11 +768,16 @@ function bindStep3Events() {
       return;
     }
 
-    const seq = seqInput.value.trim() || String(state.videos.length + 1);
+    const nextNum = state.videos.length + 1;
+    const seq = seqInput.value.trim() || String(nextNum);
+    const studentId = studentIdInput?.value.trim() || `D112010${nextNum}`;
+    const studentName = studentNameInput?.value.trim() || `同學 ${nextNum}`;
     const notes = noteInput.value.trim() || '片長約 105 秒，包含個人成長故事與 3 位親友師長訪談紀錄，自我反思清楚。';
 
     state.videos.push({
       seq,
+      studentId,
+      studentName,
       type: 'url',
       source: url,
       title: url,
@@ -758,16 +787,19 @@ function bindStep3Events() {
       scores: {},
       itemComments: {},
       totalScore: null,
+      summaryComment: '',
       overallComment: ''
     });
 
     seqInput.value = '';
+    if (studentIdInput) studentIdInput.value = '';
+    if (studentNameInput) studentNameInput.value = '';
     urlInput.value = '';
     noteInput.value = '';
 
     renderVideoQueue();
     updateStepBadges();
-    showToast(`已將序號「${seq}」影片網址加入清單！`, 'success');
+    showToast(`已將「${studentId} ${studentName}」的影片網址加入清單！`, 'success');
   });
 
   // 方式 B：上傳本機影片檔案
@@ -776,7 +808,9 @@ function bindStep3Events() {
     if (files.length === 0) return;
 
     for (const file of files) {
-      const seq = String(state.videos.length + 1);
+      const nextNum = state.videos.length + 1;
+      const seq = String(nextNum);
+      const parsedStudent = parseStudentIdAndNameFromText(file.name, nextNum);
       const objectUrl = URL.createObjectURL(file);
       const metadata = await probeVideoMetadata(objectUrl);
 
@@ -786,6 +820,8 @@ function bindStep3Events() {
 
       state.videos.push({
         seq,
+        studentId: parsedStudent.studentId,
+        studentName: parsedStudent.studentName,
         type: 'file',
         source: file.name,
         objectUrl,
@@ -797,6 +833,7 @@ function bindStep3Events() {
         scores: {},
         itemComments: {},
         totalScore: null,
+        summaryComment: '',
         overallComment: ''
       });
     }
@@ -825,7 +862,7 @@ function bindStep3Events() {
     state.videos = JSON.parse(JSON.stringify(DEMO_VIDEOS));
     renderVideoQueue();
     updateStepBadges();
-    showToast('已載入 3 筆測試影片清單！', 'success');
+    showToast('已載入 3 筆測試影片清單（含學號與姓名）！', 'success');
   });
 
   // 清空清單
@@ -903,15 +940,29 @@ async function handleExcelBatchUpload(file) {
     }
 
     let addedCount = 0;
-    rows.forEach((row, index) => {
+    rows.forEach((row) => {
       const keys = Object.keys(row);
-      // 智慧匹配「序號」欄位與「網址」欄位
-      const seqKey = keys.find((k) => /序號|編號|學號|組別|id|no|seq/i.test(k)) || keys[0];
-      const urlKey = keys.find((k) => /網址|連結|影片|url|link|video|http/i.test(k)) || keys[1] || keys[0];
-      const noteKey = keys.find((k) => /備註|說明|摘要|姓名|主題|note|desc|title|name/i.test(k));
+      const nextNum = state.videos.length + 1;
+
+      // 智慧匹配「序號」、「學號」、「姓名」、「網址」欄位
+      const seqKey = keys.find((k) => /序號|編號|項次|no|seq/i.test(k)) || keys[0];
+      const studentIdKey = keys.find((k) => /學號|student\s*id|sid/i.test(k));
+      const studentNameKey = keys.find((k) => /姓名|學生姓名|名字|name|student/i.test(k));
+      const urlKey =
+        keys.find((k) => /網址|連結|影片|url|link|video|http/i.test(k)) ||
+        keys.find((k) => String(row[k]).startsWith('http')) ||
+        keys[1] ||
+        keys[0];
+      const noteKey = keys.find((k) => /備註|說明|摘要|主題|note|desc|title/i.test(k));
       const durationKey = keys.find((k) => /片長|秒數|時間|duration|length/i.test(k));
 
-      const rawSeq = String(row[seqKey] ?? '').trim() || String(state.videos.length + 1);
+      const rawSeq = String(row[seqKey] ?? '').trim() || String(nextNum);
+      const rawStudentId = studentIdKey
+        ? String(row[studentIdKey] ?? '').trim()
+        : `D112010${nextNum}`;
+      const rawStudentName = studentNameKey
+        ? String(row[studentNameKey] ?? '').trim()
+        : `同學 ${nextNum}`;
       const rawUrl = String(row[urlKey] ?? '').trim();
       const rawNote = noteKey ? String(row[noteKey] ?? '').trim() : '';
       const rawDur = durationKey ? parseInt(row[durationKey], 10) : null;
@@ -919,17 +970,20 @@ async function handleExcelBatchUpload(file) {
       if (rawUrl) {
         state.videos.push({
           seq: rawSeq,
+          studentId: rawStudentId || `D112010${nextNum}`,
+          studentName: rawStudentName || `同學 ${nextNum}`,
           type: 'excel-url',
           source: rawUrl,
           title: rawUrl,
           durationSec: !isNaN(rawDur) && rawDur > 0 ? rawDur : 105,
           notes:
             rawNote ||
-            `由 Excel 匯入（序號 ${rawSeq}）。呈現個人成長故事、3位親友師長訪談與自我探索反思，片長符合 90~120 秒規範。`,
+            `由 Excel 匯入（序號 ${rawSeq}，${rawStudentId} ${rawStudentName}）。呈現個人成長故事、3位親友師長訪談與自我探索反思，片長符合 90~120 秒規範。`,
           status: 'pending',
           scores: {},
           itemComments: {},
           totalScore: null,
+          summaryComment: '',
           overallComment: ''
         });
         addedCount++;
@@ -944,7 +998,7 @@ async function handleExcelBatchUpload(file) {
     renderVideoQueue();
     renderResultsTable();
     updateStepBadges();
-    showToast(`已成功從「${file.name}」匯入 ${addedCount} 筆影片網址清單！`, 'success');
+    showToast(`已成功從「${file.name}」匯入 ${addedCount} 位同學的影片清單！`, 'success');
   } catch (err) {
     console.error('Excel parse error:', err);
     showToast('讀取 Excel 檔案失敗，請確認檔案為 .xlsx, .xls 或 .csv 格式。', 'error');
@@ -955,27 +1009,33 @@ function downloadSampleInputExcel() {
   const sampleData = [
     {
       序號: '1',
+      學號: 'D1120101',
+      姓名: '王曉明',
       網址: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       作品說明或備註: '片長108秒，含童年AI生成畫面與3位師長親友訪談，自我覺察深刻'
     },
     {
       序號: '2',
+      學號: 'D1120102',
+      姓名: '林佳穎',
       網址: 'https://youtu.be/jNQXAC9IVRw',
       作品說明或備註: '片長115秒，完成3位訪談且敘事流暢，收音清晰'
     },
     {
       序號: '3',
+      學號: 'D1120103',
+      姓名: '張家豪',
       網址: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ',
       作品說明或備註: '片長76秒，成長照片豐富但僅2位受訪者'
     }
   ];
 
   const ws = XLSX.utils.json_to_sheet(sampleData);
-  ws['!cols'] = [{ wch: 10 }, { wch: 48 }, { wch: 55 }];
+  ws['!cols'] = [{ wch: 10 }, { wch: 16 }, { wch: 14 }, { wch: 46 }, { wch: 52 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, '影片評分清單範本');
   XLSX.writeFile(wb, '影片評分小幫手_批次網址匯入範本.xlsx');
-  showToast('已下載「影片評分小幫手_批次網址匯入範本.xlsx」！', 'success');
+  showToast('已下載「影片評分小幫手_批次網址匯入範本.xlsx」（含序號、學號、姓名、網址）！', 'success');
 }
 
 function renderVideoQueue() {
@@ -990,7 +1050,7 @@ function renderVideoQueue() {
   if (state.videos.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="7" class="py-12 text-center text-slate-500 text-base font-medium">
+        <td colspan="9" class="py-12 text-center text-slate-500 text-base font-medium">
           目前尚無待評分影片，請由上方新增「影片網址」、「上傳影片檔」或「上傳 Excel 批次清單」。
         </td>
       </tr>
@@ -1016,24 +1076,34 @@ function renderVideoQueue() {
 
       return `
       <tr class="hover:bg-amber-50/40 transition">
-        <td class="py-4 px-4 font-extrabold text-slate-900">
+        <td class="py-3.5 px-3 font-extrabold text-slate-900">
           <input type="text" data-idx="${idx}" data-field="seq" value="${escapeHtml(v.seq)}"
-            class="video-edit-input w-20 bg-transparent border-2 border-transparent hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-lg px-2 py-1 text-base font-extrabold">
+            class="video-edit-input w-14 bg-transparent border-2 border-transparent hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-lg px-2 py-1 text-base font-extrabold">
         </td>
-        <td class="py-4 px-4">${typeBadge}</td>
-        <td class="py-4 px-4 max-w-xs truncate">
+        <td class="py-3.5 px-3">
+          <input type="text" data-idx="${idx}" data-field="studentId" value="${escapeHtml(v.studentId || '')}"
+            placeholder="輸入學號"
+            class="video-edit-input w-28 bg-amber-50/40 border-2 border-slate-200 hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-lg px-2.5 py-1 text-sm sm:text-base font-bold text-slate-900">
+        </td>
+        <td class="py-3.5 px-3">
+          <input type="text" data-idx="${idx}" data-field="studentName" value="${escapeHtml(v.studentName || '')}"
+            placeholder="輸入姓名"
+            class="video-edit-input w-24 bg-amber-50/40 border-2 border-slate-200 hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-lg px-2.5 py-1 text-sm sm:text-base font-bold text-slate-900">
+        </td>
+        <td class="py-3.5 px-3">${typeBadge}</td>
+        <td class="py-3.5 px-4 max-w-xs truncate">
           <a href="${escapeHtml(v.objectUrl || v.source)}" target="_blank" rel="noopener noreferrer" class="text-orange-700 hover:text-orange-600 hover:underline font-bold text-sm sm:text-base break-all">
             ${escapeHtml(v.source)}
           </a>
         </td>
-        <td class="py-4 px-4 text-sm sm:text-base text-slate-700 font-bold">${durationDisplay}</td>
-        <td class="py-4 px-4">
+        <td class="py-3.5 px-3 text-sm sm:text-base text-slate-700 font-bold">${durationDisplay}</td>
+        <td class="py-3.5 px-4">
           <input type="text" data-idx="${idx}" data-field="notes" value="${escapeHtml(v.notes)}"
             placeholder="可補充影片觀察重點供 AI 評分參考..."
             class="video-edit-input w-full bg-amber-50/40 border-2 border-slate-200 hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-xl px-3 py-1.5 text-sm sm:text-base font-medium text-slate-800 focus:outline-none">
         </td>
-        <td class="py-4 px-4 text-center">${statusBadge}</td>
-        <td class="py-4 px-3 text-center">
+        <td class="py-3.5 px-3 text-center">${statusBadge}</td>
+        <td class="py-3.5 px-3 text-center">
           <div class="inline-flex items-center gap-1.5">
             <button type="button" onclick="openDetailModal(${idx})" class="p-2 rounded-xl text-orange-600 hover:bg-orange-50 transition cursor-pointer" title="檢視/微調評分">
               <i data-lucide="sliders" class="w-5 h-5"></i>
@@ -1205,7 +1275,12 @@ function gradeSingleVideoHeuristic(videoIdx) {
   video.totalScore = totalScore;
   video.status = 'graded';
 
-  // 組合具體且實用的綜合評語
+  // 組合分項評語彙整 (評語)
+  video.summaryComment = state.rubric.criteria
+    .map((c) => `• ${c.name}（${scores[c.id]}/${c.weight}分）：${itemComments[c.id]}`)
+    .join('\n');
+
+  // 組合針對該位同學的個人化總評語 (總評語)
   const tierLabel =
     totalScore >= 90
       ? '優秀 (A+)'
@@ -1217,6 +1292,8 @@ function gradeSingleVideoHeuristic(videoIdx) {
       ? '基礎及格 (C)'
       : '待加強 (D)';
 
+  const studentLabel = video.studentName ? `${video.studentName}同學（${video.studentId || ''}）` : '該位同學';
+
   const strengthText =
     strengths.length > 0
       ? `肯定優點：${strengths.slice(0, 3).join('；')}。`
@@ -1227,7 +1304,7 @@ function gradeSingleVideoHeuristic(videoIdx) {
       ? `精進建議：${improvements.join('；')}。`
       : '精進建議：整體結構與自我覺察皆相當成熟，未來可持續嘗試更多元的視覺敘事與聲音層次設計。';
 
-  video.overallComment = `[總評：${totalScore}分 / ${tierLabel}] ${strengthText}${improveText}`;
+  video.overallComment = `${studentLabel}於本期中影片獲得 ${totalScore} 分（${tierLabel}）。${strengthText}${improveText}`;
 }
 
 async function gradeSingleVideoWithAI(videoIdx) {
@@ -1243,7 +1320,7 @@ async function gradeSingleVideoWithAI(videoIdx) {
       .join('\n');
 
     const prompt = `你是一位專業且嚴謹的大學課程「影片評分小幫手」評審委員。
-請根據以下【影片製作內容說明】與【評分標準 Rubrics】，針對學生提交的影片作品進行逐項評分並給出具體繁體中文評語。
+請根據以下【影片製作內容說明】與【評分標準 Rubrics】，針對學生提交的影片作品進行逐項評分並給出具體繁體中文「各分項評語」與「個人總評語」。
 
 【影片製作內容說明】：
 ${state.guideline.text}
@@ -1253,6 +1330,8 @@ ${criteriaPrompt}
 
 【待評分學生影片資訊】：
 - 序號：${video.seq}
+- 學號：${video.studentId || ''}
+- 姓名：${video.studentName || ''}
 - 影片來源/網址：${video.source}
 - 偵測片長：${video.durationSec ? video.durationSec + '秒' : '約 90~120 秒'}
 - 作品內容摘要與觀察重點：${video.notes}
@@ -1263,9 +1342,10 @@ ${criteriaPrompt}
     "指標ID": 數字得分
   },
   "itemComments": {
-    "指標ID": "該項目的具體評分依據說明"
+    "指標ID": "該項目的具體評語說明"
   },
-  "overallComment": "120~200字的綜合評語，包含作品亮點肯定與具體修改建議"
+  "summaryComment": "針對各評分項目的重點評語摘要",
+  "overallComment": "針對該位同學（含稱呼其姓名）120~200字的個人總評語，包含作品亮點肯定與具體修改建議"
 }`;
 
     let respText = '';
@@ -1294,7 +1374,14 @@ ${criteriaPrompt}
       video.scores = newScores;
       video.itemComments = newItemComments;
       video.totalScore = sum;
-      video.overallComment = parsed.overallComment || `總分 ${sum} 分，符合期中影片製作規範。`;
+      video.summaryComment =
+        parsed.summaryComment ||
+        state.rubric.criteria
+          .map((c) => `• ${c.name}（${newScores[c.id]}/${c.weight}分）：${newItemComments[c.id]}`)
+          .join('\n');
+      video.overallComment =
+        parsed.overallComment ||
+        `${video.studentName || ''}同學總分 ${sum} 分，整體表現符合期中影片製作規範。`;
       video.status = 'graded';
       return;
     }
@@ -1314,7 +1401,7 @@ function renderResultsTable() {
   const criteriaHeaders = state.rubric.criteria
     .map(
       (c) => `
-      <th class="py-4 px-3 font-extrabold text-center bg-slate-800 text-amber-200 border-x border-slate-700 min-w-[130px]">
+      <th class="py-4 px-3 font-extrabold text-center bg-slate-800 text-amber-200 border-x border-slate-700 min-w-[135px]">
         <div class="text-sm sm:text-base leading-snug">${escapeHtml(c.name)}</div>
         <div class="text-xs sm:text-sm font-bold text-orange-300 mt-0.5">(${c.weight}分)</div>
       </th>
@@ -1324,19 +1411,22 @@ function renderResultsTable() {
 
   thead.innerHTML = `
     <tr class="bg-slate-900 text-white text-sm sm:text-base">
-      <th class="py-4 px-4 font-extrabold w-20">序號</th>
-      <th class="py-4 px-4 font-extrabold min-w-[210px]">影片網址 / 檔案名稱</th>
+      <th class="py-4 px-3 font-extrabold w-16 text-center">序號</th>
+      <th class="py-4 px-3 font-extrabold w-28">學號</th>
+      <th class="py-4 px-3 font-extrabold w-24">姓名</th>
+      <th class="py-4 px-3 font-extrabold min-w-[170px]">影片網址 / 檔名</th>
       ${criteriaHeaders}
-      <th class="py-4 px-4 font-black text-center bg-teal-900 text-teal-100 w-28">總分</th>
-      <th class="py-4 px-4 font-extrabold min-w-[320px]">綜合評語 (可點擊微調)</th>
-      <th class="py-4 px-3 font-extrabold text-center w-28">詳細/調整</th>
+      <th class="py-4 px-3 font-black text-center bg-teal-900 text-teal-100 w-24">總分</th>
+      <th class="py-4 px-4 font-extrabold min-w-[250px] bg-slate-800 text-sky-200">評語 (各分項評語彙整)</th>
+      <th class="py-4 px-4 font-extrabold min-w-[280px] bg-amber-950 text-amber-200">個人總評語</th>
+      <th class="py-4 px-3 font-extrabold text-center w-24">詳細/調整</th>
     </tr>
   `;
 
   if (state.videos.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="${state.rubric.criteria.length + 5}" class="py-12 text-center text-slate-500 text-base font-medium">
+        <td colspan="${state.rubric.criteria.length + 8}" class="py-12 text-center text-slate-500 text-base font-medium">
           尚無評分資料，請先於「功能三」加入影片或上傳 Excel 清單。
         </td>
       </tr>
@@ -1364,7 +1454,7 @@ function renderResultsTable() {
               : 'text-rose-800 bg-rose-100 border-rose-300';
 
           return `
-            <td class="py-4 px-3 text-center align-top">
+            <td class="py-4 px-3 text-center align-top border-x border-slate-100">
               <span class="inline-flex items-center justify-center px-3 py-1 rounded-xl text-base font-black border-2 ${badgeColor}">
                 ${displayVal}
               </span>
@@ -1385,28 +1475,39 @@ function renderResultsTable() {
 
       return `
         <tr class="hover:bg-amber-50/40 transition">
-          <td class="py-4 px-4 font-black text-lg text-slate-900 align-top">${escapeHtml(v.seq)}</td>
-          <td class="py-4 px-4 align-top max-w-[240px]">
+          <td class="py-4 px-3 font-black text-lg text-slate-900 text-center align-top">${escapeHtml(v.seq)}</td>
+          <td class="py-4 px-3 font-extrabold text-base text-slate-800 align-top">
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-slate-100 text-slate-900 border border-slate-300">${escapeHtml(v.studentId || '--')}</span>
+          </td>
+          <td class="py-4 px-3 font-black text-base text-slate-900 align-top">${escapeHtml(v.studentName || '--')}</td>
+          <td class="py-4 px-3 align-top max-w-[190px]">
             <a href="${escapeHtml(v.objectUrl || v.source)}" target="_blank" rel="noopener noreferrer" class="text-orange-700 hover:text-orange-600 hover:underline font-bold text-sm sm:text-base break-all line-clamp-2">
               ${escapeHtml(v.source)}
             </a>
             ${
               v.durationSec
-                ? `<span class="inline-block mt-1.5 text-xs sm:text-sm font-bold px-2.5 py-0.5 rounded-lg bg-amber-100 text-orange-900 border border-amber-300">⏱️ 片長：${v.durationSec}秒</span>`
+                ? `<span class="inline-block mt-1.5 text-xs font-bold px-2 py-0.5 rounded-lg bg-amber-100 text-orange-900 border border-amber-300">⏱️ ${v.durationSec}秒</span>`
                 : ''
             }
           </td>
           ${criterionCells}
-          <td class="py-4 px-4 text-center align-top bg-emerald-50/40">${totalBadge}</td>
-          <td class="py-4 px-4 align-top text-sm sm:text-base font-medium text-slate-800 leading-relaxed max-w-md">
+          <td class="py-4 px-3 text-center align-top bg-emerald-50/40">${totalBadge}</td>
+          <td class="py-4 px-3 align-top text-xs sm:text-sm font-medium text-slate-800 leading-relaxed max-w-[260px]">
+            ${
+              v.summaryComment
+                ? `<div class="p-3 rounded-2xl bg-sky-50/70 border-2 border-sky-200/80 text-slate-800 whitespace-pre-line">${escapeHtml(v.summaryComment)}</div>`
+                : `<span class="text-slate-400 italic">待執行評分</span>`
+            }
+          </td>
+          <td class="py-4 px-3 align-top text-sm sm:text-base font-medium text-slate-900 leading-relaxed max-w-[300px]">
             ${
               v.overallComment
-                ? `<div class="p-3.5 rounded-2xl bg-amber-50/60 border-2 border-amber-200/80 text-slate-900">${escapeHtml(v.overallComment)}</div>`
-                : `<span class="text-slate-400 italic">點擊上方「依 Rubrics 執行 AI 評分」自動產出評語</span>`
+                ? `<div class="p-3.5 rounded-2xl bg-amber-50/70 border-2 border-amber-200/90 text-slate-900 font-semibold">${escapeHtml(v.overallComment)}</div>`
+                : `<span class="text-slate-400 italic">點擊上方「依 Rubrics 執行 AI 評分」自動產出總評語</span>`
             }
           </td>
           <td class="py-4 px-3 text-center align-top">
-            <button type="button" onclick="openDetailModal(${idx})" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-extrabold text-orange-800 bg-amber-100 hover:bg-amber-200 border-2 border-amber-300 transition cursor-pointer shadow-2xs">
+            <button type="button" onclick="openDetailModal(${idx})" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-extrabold text-orange-800 bg-amber-100 hover:bg-amber-200 border-2 border-amber-300 transition cursor-pointer shadow-2xs">
               <i data-lucide="edit-3" class="w-4 h-4 text-orange-600"></i>
               <span>微調</span>
             </button>
@@ -1442,7 +1543,7 @@ function updateSummaryStats() {
 
 /**
  * 匯出完整評分結果 Excel (.xlsx) 檔案
- * 包含：序號、影片網址/檔名、每一項 Rubrics 評分結果、每一項分項說明、總分、綜合評語
+ * 包含：序號、學號、姓名、影片網址/檔名、每一項 Rubrics 評分結果、每一項分項評語、總分、評語、個人總評語
  */
 function exportResultsToExcel() {
   if (state.videos.length === 0) {
@@ -1461,22 +1562,22 @@ function exportResultsToExcel() {
   const exportRows = state.videos.map((v) => {
     const row = {
       序號: v.seq,
+      學號: v.studentId || '',
+      姓名: v.studentName || '',
       '影片網址 / 檔案名稱': v.source
     };
 
-    // 依序加入每一項 Rubrics 評分結果
+    // 依序加入每一項 Rubrics 評分結果與分項評語
     state.rubric.criteria.forEach((c) => {
-      const colName = `${c.name} (${c.weight}分)`;
-      row[colName] = v.scores?.[c.id] ?? '';
+      const scoreCol = `${c.name} (${c.weight}分)`;
+      const commentCol = `${c.name} - 評語`;
+      row[scoreCol] = v.scores?.[c.id] ?? '';
+      row[commentCol] = v.itemComments?.[c.id] || '';
     });
 
     row['總分'] = v.totalScore ?? '';
-    row['綜合評語'] = v.overallComment || '';
-
-    // 附加各分項評語明細欄
-    state.rubric.criteria.forEach((c) => {
-      row[`[${c.name}] 分項評定說明`] = v.itemComments?.[c.id] || '';
-    });
+    row['評語（分項評語彙整）'] = v.summaryComment || '';
+    row['總評語'] = v.overallComment || '';
 
     return row;
   });
@@ -1484,10 +1585,12 @@ function exportResultsToExcel() {
   const wsResults = XLSX.utils.json_to_sheet(exportRows);
 
   // 設定欄位寬度讓老師或助教打開 Excel 即可直接閱讀與列印
-  const colWidths = [{ wch: 10 }, { wch: 42 }];
-  state.rubric.criteria.forEach(() => colWidths.push({ wch: 22 }));
-  colWidths.push({ wch: 12 }, { wch: 65 });
-  state.rubric.criteria.forEach(() => colWidths.push({ wch: 36 }));
+  const colWidths = [{ wch: 8 }, { wch: 15 }, { wch: 12 }, { wch: 38 }];
+  state.rubric.criteria.forEach(() => {
+    colWidths.push({ wch: 20 }); // 該項得分欄寬
+    colWidths.push({ wch: 34 }); // 該項評語欄寬
+  });
+  colWidths.push({ wch: 10 }, { wch: 52 }, { wch: 65 });
   wsResults['!cols'] = colWidths;
 
   // 工作表 2：本次使用的評分標準 Rubrics 與製作說明備查
@@ -1516,7 +1619,7 @@ function exportResultsToExcel() {
   const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const fileName = `影片評分小幫手_評分結果報表_${dateStr}.xlsx`;
   XLSX.writeFile(wb, fileName);
-  showToast(`已成功匯出「${fileName}」供您下載！`, 'success');
+  showToast(`已成功匯出「${fileName}」（含學號、姓名、各項得分、評語、總分與總評語）！`, 'success');
 }
 
 // ==========================================
@@ -1583,7 +1686,7 @@ window.openDetailModal = function (idx) {
   const titleEl = document.getElementById('detailModalTitle');
   const bodyEl = document.getElementById('detailModalBody');
 
-  titleEl.textContent = `序號 ${video.seq} — 影片分項評分與評語微調`;
+  titleEl.textContent = `序號 ${video.seq}（${video.studentId || ''} ${video.studentName || ''}）— 分項評分與評語微調`;
 
   const embedHtml = getVideoEmbedHtml(video);
 
@@ -1612,7 +1715,7 @@ window.openDetailModal = function (idx) {
             <div class="p-2 rounded-xl bg-white border border-slate-200"><strong class="text-rose-700">待加強:</strong> ${escapeHtml(c.needsImprovement)}</div>
           </div>
           <div>
-            <input type="text" data-cid="${c.id}" value="${escapeHtml(commentVal)}" placeholder="本項評分說明..."
+            <input type="text" data-cid="${c.id}" value="${escapeHtml(commentVal)}" placeholder="本項評語說明..."
               class="detail-item-comment-input w-full mt-1 px-3.5 py-2 rounded-xl border-2 border-slate-200 bg-white text-sm sm:text-base font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400">
           </div>
         </div>
@@ -1626,8 +1729,18 @@ window.openDetailModal = function (idx) {
         <div class="rounded-2xl overflow-hidden border-2 border-slate-200 bg-slate-950 aspect-video flex items-center justify-center">
           ${embedHtml}
         </div>
-        <div class="p-4 rounded-2xl bg-amber-50/60 border-2 border-amber-200 text-sm space-y-2">
-          <div class="flex items-center justify-between">
+        <div class="p-4 rounded-2xl bg-amber-50/60 border-2 border-amber-200 text-sm space-y-3">
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block font-extrabold text-slate-800 mb-1">學號：</label>
+              <input id="detailStudentId" type="text" value="${escapeHtml(video.studentId || '')}" class="w-full rounded-xl border-2 border-slate-200 bg-white px-3 py-1.5 text-sm sm:text-base font-bold text-slate-900">
+            </div>
+            <div>
+              <label class="block font-extrabold text-slate-800 mb-1">姓名：</label>
+              <input id="detailStudentName" type="text" value="${escapeHtml(video.studentName || '')}" class="w-full rounded-xl border-2 border-slate-200 bg-white px-3 py-1.5 text-sm sm:text-base font-bold text-slate-900">
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-1">
             <span class="font-extrabold text-slate-800">影片來源：</span>
             <a href="${escapeHtml(video.objectUrl || video.source)}" target="_blank" rel="noopener noreferrer" class="text-orange-700 font-bold hover:underline truncate max-w-[220px]">開啟原始連結 ↗</a>
           </div>
@@ -1644,12 +1757,16 @@ window.openDetailModal = function (idx) {
             目前總分：${video.totalScore ?? 0} 分
           </span>
         </div>
-        <div class="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+        <div class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
           ${criteriaInputsHtml}
         </div>
         <div>
-          <label class="block text-sm sm:text-base font-extrabold text-slate-900 mb-1">綜合評語 (將匯出至 Excel 報表)</label>
-          <textarea id="detailOverallComment" rows="3" class="w-full rounded-xl border-2 border-slate-300 bg-white p-3.5 text-base font-medium text-slate-900 leading-relaxed focus:outline-none focus:ring-2 focus:ring-orange-400">${escapeHtml(video.overallComment)}</textarea>
+          <label class="block text-sm sm:text-base font-extrabold text-slate-900 mb-1">評語（各分項評語彙整，將匯出至 Excel）</label>
+          <textarea id="detailSummaryComment" rows="2" class="w-full rounded-xl border-2 border-sky-200 bg-sky-50/40 p-3 text-sm sm:text-base font-medium text-slate-900 leading-relaxed focus:outline-none focus:ring-2 focus:ring-sky-400">${escapeHtml(video.summaryComment || '')}</textarea>
+        </div>
+        <div>
+          <label class="block text-sm sm:text-base font-extrabold text-slate-900 mb-1">個人總評語（針對該位同學之整體總評，將匯出至 Excel）</label>
+          <textarea id="detailOverallComment" rows="3" class="w-full rounded-xl border-2 border-amber-300 bg-amber-50/40 p-3 text-sm sm:text-base font-semibold text-slate-900 leading-relaxed focus:outline-none focus:ring-2 focus:ring-orange-400">${escapeHtml(video.overallComment)}</textarea>
         </div>
       </div>
     </div>
@@ -1682,6 +1799,9 @@ function saveDetailModalChanges() {
   const video = state.videos[idx];
   const bodyEl = document.getElementById('detailModalBody');
 
+  video.studentId = document.getElementById('detailStudentId')?.value.trim() || video.studentId;
+  video.studentName = document.getElementById('detailStudentName')?.value.trim() || video.studentName;
+
   let sum = 0;
   bodyEl.querySelectorAll('.detail-score-input').forEach((inp) => {
     const cid = inp.getAttribute('data-cid');
@@ -1696,6 +1816,7 @@ function saveDetailModalChanges() {
   });
 
   video.totalScore = sum;
+  video.summaryComment = document.getElementById('detailSummaryComment')?.value.trim() || '';
   video.overallComment = document.getElementById('detailOverallComment')?.value.trim() || '';
   video.notes = document.getElementById('detailVideoNotes')?.value.trim() || '';
   video.status = 'graded';
@@ -1704,7 +1825,7 @@ function saveDetailModalChanges() {
   renderVideoQueue();
   renderResultsTable();
   updateStepBadges();
-  showToast(`已儲存序號「${video.seq}」的評分與評語變更！`, 'success');
+  showToast(`已儲存「${video.studentId} ${video.studentName}」的評分與總評語變更！`, 'success');
 }
 
 function getVideoEmbedHtml(video) {

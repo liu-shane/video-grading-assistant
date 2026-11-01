@@ -392,17 +392,27 @@
                   </div>
                 </div>
                 <div class="space-y-3">
-                  <div>
-                    <label class="block text-sm font-bold text-slate-800 mb-1">序號 / 學生姓名或組別 (選填)</label>
-                    <input id="inputSingleId" type="text" placeholder="例如：1 或 A01 王小明" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
+                  <div class="grid grid-cols-3 gap-2">
+                    <div>
+                      <label class="block text-sm font-bold text-slate-800 mb-1">序號</label>
+                      <input id="inputSingleId" type="text" placeholder="如：1" class="w-full px-3 py-2 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-bold text-slate-800 mb-1">學號 *</label>
+                      <input id="inputSingleStudentId" type="text" placeholder="如：D1120001" class="w-full px-3 py-2 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-bold text-slate-800 mb-1">姓名 *</label>
+                      <input id="inputSingleStudentName" type="text" placeholder="如：王曉明" class="w-full px-3 py-2 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
+                    </div>
                   </div>
                   <div>
                     <label class="block text-sm font-bold text-slate-800 mb-1">影片網址 (URL) *</label>
-                    <input id="inputSingleUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
+                    <input id="inputSingleUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3.5 py-2 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
                   </div>
                   <div>
                     <label class="block text-sm font-bold text-slate-800 mb-1">作品摘要 / 備註說明 (選填)</label>
-                    <input id="inputSingleNote" type="text" placeholder="例如：片長1分45秒，含3位親友訪談..." class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
+                    <input id="inputSingleNote" type="text" placeholder="例如：片長1分45秒，含3位親友訪談..." class="w-full px-3.5 py-2 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
                   </div>
                 </div>
               </div>
@@ -446,19 +456,19 @@
                   </div>
                   <div>
                     <h3 class="text-lg font-extrabold text-slate-900">方式 C：上傳 Excel 批次清單</h3>
-                    <p class="text-sm font-medium text-slate-600">內含「序號」與「網址」欄位的 Excel 檔</p>
+                    <p class="text-sm font-medium text-slate-600">內含「序號、學號、姓名、網址」的 Excel 檔</p>
                   </div>
                 </div>
                 <label for="inputExcelBatch" class="group flex flex-col items-center justify-center p-6 border-3 border-dashed border-teal-300 hover:border-teal-500 rounded-2xl bg-white hover:bg-teal-50/40 transition cursor-pointer text-center min-h-[180px]">
                   <input id="inputExcelBatch" type="file" accept=".xlsx,.xls,.csv" class="sr-only">
                   <i data-lucide="file-spreadsheet" class="w-10 h-10 text-teal-600 mb-2.5 group-hover:scale-110 transition-transform"></i>
                   <span class="text-base font-extrabold text-slate-800">點擊上傳 Excel (.xlsx / .xls / .csv)</span>
-                  <span class="text-sm font-medium text-slate-500 mt-1.5">自動辨識「序號 / 編號 / 學號」與「網址 / URL / 連結」欄位</span>
+                  <span class="text-sm font-medium text-slate-500 mt-1.5">自動辨識「序號」、「學號」、「姓名」與「網址」欄位</span>
                 </label>
               </div>
               <div class="mt-4 text-sm font-medium text-slate-600 flex items-center gap-2">
                 <i data-lucide="check-check" class="w-4 h-4 text-teal-600 shrink-0"></i>
-                <span>支援選填「備註/作品說明/姓名」欄位，一併匯入評分列表。</span>
+                <span>支援選填「備註/作品說明」欄位，一併匯入評分列表。</span>
               </div>
             </div>
 
@@ -488,13 +498,15 @@
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-slate-800 text-white text-sm sm:text-base border-b border-slate-300">
-                    <th class="py-3.5 px-4 font-extrabold w-24">序號</th>
-                    <th class="py-3.5 px-4 font-extrabold w-32">來源類型</th>
+                    <th class="py-3.5 px-3 font-extrabold w-20">序號</th>
+                    <th class="py-3.5 px-3 font-extrabold w-32">學號</th>
+                    <th class="py-3.5 px-3 font-extrabold w-28">姓名</th>
+                    <th class="py-3.5 px-3 font-extrabold w-28">來源類型</th>
                     <th class="py-3.5 px-4 font-extrabold">影片網址 / 檔案名稱</th>
-                    <th class="py-3.5 px-4 font-extrabold w-32">偵測片長</th>
+                    <th class="py-3.5 px-3 font-extrabold w-28">偵測片長</th>
                     <th class="py-3.5 px-4 font-extrabold">作品內容補充 / 觀察重點 (可編輯)</th>
-                    <th class="py-3.5 px-4 font-extrabold w-32 text-center">狀態</th>
-                    <th class="py-3.5 px-3 font-extrabold w-28 text-center">操作</th>
+                    <th class="py-3.5 px-3 font-extrabold w-28 text-center">狀態</th>
+                    <th class="py-3.5 px-3 font-extrabold w-24 text-center">操作</th>
                   </tr>
                 </thead>
                 <tbody id="videoQueueBody" class="divide-y divide-slate-200 text-base">
@@ -520,9 +532,9 @@
               <i data-lucide="award" class="w-4 h-4"></i>
               <span>Step 4 · 評分結果與報表下載</span>
             </div>
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Rubrics 分項評分結果、總分與綜合評語</h2>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">每位同學之學號、姓名、各項得分與評語、總分及總評語</h2>
             <p class="text-base sm:text-lg font-medium text-slate-700 mt-1">
-              點擊單筆可檢視或微調各項指標分數與評語，確認無誤後可一鍵下載完整 <strong class="text-teal-700 underline decoration-teal-300 decoration-2">Excel (.xlsx) 評分報表</strong>。
+              完整呈現每位同學的<strong class="text-orange-700">學號、姓名、各分項評分結果與分項評語、總分及個人總評語</strong>，並提供 <strong class="text-teal-700 underline decoration-teal-300 decoration-2">Excel (.xlsx) 檔案格式</strong>供下載。
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-3 shrink-0">
