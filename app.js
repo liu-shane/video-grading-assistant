@@ -186,15 +186,23 @@ function switchTab(tabId) {
   document.querySelectorAll('.step-tab').forEach((btn) => {
     const isTarget = btn.getAttribute('data-tab') === tabId;
     btn.classList.toggle('active', isTarget);
-    btn.classList.toggle('border-indigo-600', isTarget);
-    btn.classList.toggle('border-slate-200/80', !isTarget);
+    btn.classList.toggle('border-orange-500', isTarget);
+    btn.classList.toggle('border-amber-200', !isTarget);
 
     const iconBox = btn.querySelector('.step-icon');
     if (iconBox) {
-      iconBox.classList.toggle('bg-indigo-600', isTarget);
-      iconBox.classList.toggle('text-white', isTarget);
-      iconBox.classList.toggle('bg-slate-100', !isTarget);
-      iconBox.classList.toggle('text-slate-600', !isTarget);
+      if (isTarget) {
+        iconBox.className = 'step-icon w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm transition-all';
+      } else {
+        iconBox.className = 'step-icon w-12 h-12 rounded-2xl bg-amber-100 text-orange-700 group-hover:bg-orange-500 group-hover:text-white flex items-center justify-center font-bold shrink-0 transition-all';
+      }
+    }
+
+    const labelEl = btn.querySelector('.step-label');
+    if (labelEl) {
+      labelEl.className = isTarget
+        ? 'step-label text-xs sm:text-sm font-extrabold uppercase tracking-wider text-orange-600'
+        : 'step-label text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-500 group-hover:text-orange-600';
     }
   });
 
@@ -230,8 +238,8 @@ function updateStepBadges() {
     const hasContent = state.guideline.text.trim().length > 0;
     b1.textContent = hasContent ? '已備妥' : '待上傳';
     b1.className = hasContent
-      ? 'inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200'
-      : 'inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200';
+      ? 'inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300'
+      : 'inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300';
   }
 
   const b2 = document.getElementById('badgeStep2');
@@ -243,8 +251,8 @@ function updateStepBadges() {
   if (b3) {
     b3.textContent = `${state.videos.length} 部影片`;
     b3.className = state.videos.length > 0
-      ? 'inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-indigo-50 text-indigo-700 border border-indigo-200'
-      : 'inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600';
+      ? 'inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-sky-100 text-sky-800 border border-sky-300'
+      : 'inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-slate-100 text-slate-600';
   }
 
   const b4 = document.getElementById('badgeStep4');
@@ -643,37 +651,37 @@ function renderRubricTable() {
   tbody.innerHTML = state.rubric.criteria
     .map(
       (c, idx) => `
-    <tr class="hover:bg-slate-50/80 transition">
-      <td class="py-3 px-3 align-top">
+    <tr class="hover:bg-amber-50/40 transition">
+      <td class="py-3.5 px-3 align-top">
         <input type="text" data-idx="${idx}" data-field="name" value="${escapeHtml(c.name)}"
-          class="rubric-input w-full font-bold text-slate-900 bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 focus:bg-white rounded-lg px-2 py-1 text-xs sm:text-sm focus:outline-none">
+          class="rubric-input w-full font-extrabold text-slate-900 bg-transparent border-2 border-transparent hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-xl px-2.5 py-1.5 text-base focus:outline-none">
       </td>
-      <td class="py-3 px-2 align-top text-center">
+      <td class="py-3.5 px-2 align-top text-center">
         <div class="inline-flex items-center">
           <input type="number" min="1" max="100" data-idx="${idx}" data-field="weight" value="${c.weight}"
-            class="rubric-input w-16 text-center font-extrabold text-indigo-700 bg-indigo-50/70 border border-indigo-200 rounded-lg px-2 py-1 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <span class="ml-1 text-xs text-slate-500">分</span>
+            class="rubric-input w-20 text-center font-black text-orange-800 bg-orange-50 border-2 border-orange-300 rounded-xl px-2 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-orange-400">
+          <span class="ml-1.5 text-sm font-bold text-slate-600">分</span>
         </div>
       </td>
-      <td class="py-3 px-2 align-top">
+      <td class="py-3.5 px-2 align-top">
         <textarea rows="2" data-idx="${idx}" data-field="excellent"
-          class="rubric-input w-full text-xs text-slate-700 bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 focus:bg-white rounded-lg p-1.5 focus:outline-none">${escapeHtml(c.excellent)}</textarea>
+          class="rubric-input w-full text-sm sm:text-base font-medium text-slate-800 bg-transparent border-2 border-transparent hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-xl p-2 leading-snug focus:outline-none">${escapeHtml(c.excellent)}</textarea>
       </td>
-      <td class="py-3 px-2 align-top">
+      <td class="py-3.5 px-2 align-top">
         <textarea rows="2" data-idx="${idx}" data-field="good"
-          class="rubric-input w-full text-xs text-slate-700 bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 focus:bg-white rounded-lg p-1.5 focus:outline-none">${escapeHtml(c.good)}</textarea>
+          class="rubric-input w-full text-sm sm:text-base font-medium text-slate-800 bg-transparent border-2 border-transparent hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-xl p-2 leading-snug focus:outline-none">${escapeHtml(c.good)}</textarea>
       </td>
-      <td class="py-3 px-2 align-top">
+      <td class="py-3.5 px-2 align-top">
         <textarea rows="2" data-idx="${idx}" data-field="basic"
-          class="rubric-input w-full text-xs text-slate-700 bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 focus:bg-white rounded-lg p-1.5 focus:outline-none">${escapeHtml(c.basic)}</textarea>
+          class="rubric-input w-full text-sm sm:text-base font-medium text-slate-800 bg-transparent border-2 border-transparent hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-xl p-2 leading-snug focus:outline-none">${escapeHtml(c.basic)}</textarea>
       </td>
-      <td class="py-3 px-2 align-top">
+      <td class="py-3.5 px-2 align-top">
         <textarea rows="2" data-idx="${idx}" data-field="needsImprovement"
-          class="rubric-input w-full text-xs text-slate-700 bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 focus:bg-white rounded-lg p-1.5 focus:outline-none">${escapeHtml(c.needsImprovement)}</textarea>
+          class="rubric-input w-full text-sm sm:text-base font-medium text-slate-800 bg-transparent border-2 border-transparent hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-xl p-2 leading-snug focus:outline-none">${escapeHtml(c.needsImprovement)}</textarea>
       </td>
-      <td class="py-3 px-2 align-top text-center">
-        <button type="button" onclick="removeRubricCriterion(${idx})" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer" title="刪除此項目">
-          <i data-lucide="trash-2" class="w-4 h-4"></i>
+      <td class="py-3.5 px-2 align-top text-center">
+        <button type="button" onclick="removeRubricCriterion(${idx})" class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer" title="刪除此項目">
+          <i data-lucide="trash-2" class="w-5 h-5"></i>
         </button>
       </td>
     </tr>
@@ -704,8 +712,8 @@ function updateTotalWeightBadge() {
   badge.textContent = `總配分：${total} 分`;
   badge.className =
     total === 100
-      ? 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200'
-      : 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200';
+      ? 'px-3.5 py-1 rounded-full text-sm font-extrabold bg-emerald-100 text-emerald-900 border-2 border-emerald-300'
+      : 'px-3.5 py-1 rounded-full text-sm font-extrabold bg-amber-100 text-amber-900 border-2 border-amber-300';
 }
 
 window.removeRubricCriterion = function (idx) {
@@ -982,7 +990,7 @@ function renderVideoQueue() {
   if (state.videos.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="7" class="py-10 text-center text-slate-400 text-sm">
+        <td colspan="7" class="py-12 text-center text-slate-500 text-base font-medium">
           目前尚無待評分影片，請由上方新增「影片網址」、「上傳影片檔」或「上傳 Excel 批次清單」。
         </td>
       </tr>
@@ -994,44 +1002,44 @@ function renderVideoQueue() {
     .map((v, idx) => {
       const typeBadge =
         v.type === 'file'
-          ? '<span class="px-2 py-0.5 rounded-md text-xs font-semibold bg-violet-100 text-violet-700">本機影片</span>'
+          ? '<span class="px-2.5 py-1 rounded-lg text-xs sm:text-sm font-extrabold bg-sky-100 text-sky-800 border border-sky-200">本機影片</span>'
           : v.type === 'excel-url'
-          ? '<span class="px-2 py-0.5 rounded-md text-xs font-semibold bg-emerald-100 text-emerald-700">Excel 網址</span>'
-          : '<span class="px-2 py-0.5 rounded-md text-xs font-semibold bg-indigo-100 text-indigo-700">單一網址</span>';
+          ? '<span class="px-2.5 py-1 rounded-lg text-xs sm:text-sm font-extrabold bg-teal-100 text-teal-800 border border-teal-200">Excel 網址</span>'
+          : '<span class="px-2.5 py-1 rounded-lg text-xs sm:text-sm font-extrabold bg-orange-100 text-orange-800 border border-orange-200">單一網址</span>';
 
       const statusBadge =
         v.status === 'graded'
-          ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> ${v.totalScore} 分</span>`
-          : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">待評分</span>`;
+          ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300"><i data-lucide="check-circle" class="w-4 h-4"></i> ${v.totalScore} 分</span>`
+          : `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold bg-amber-100 text-amber-800 border border-amber-300">待評分</span>`;
 
       const durationDisplay = v.durationSec ? `${v.durationSec} 秒` : '自動檢核';
 
       return `
-      <tr class="hover:bg-slate-50/80 transition">
-        <td class="py-3 px-4 font-bold text-slate-900">
+      <tr class="hover:bg-amber-50/40 transition">
+        <td class="py-4 px-4 font-extrabold text-slate-900">
           <input type="text" data-idx="${idx}" data-field="seq" value="${escapeHtml(v.seq)}"
-            class="video-edit-input w-16 bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 focus:bg-white rounded px-1.5 py-0.5 text-sm font-bold">
+            class="video-edit-input w-20 bg-transparent border-2 border-transparent hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-lg px-2 py-1 text-base font-extrabold">
         </td>
-        <td class="py-3 px-4">${typeBadge}</td>
-        <td class="py-3 px-4 max-w-xs truncate">
-          <a href="${escapeHtml(v.objectUrl || v.source)}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline font-medium text-xs sm:text-sm break-all">
+        <td class="py-4 px-4">${typeBadge}</td>
+        <td class="py-4 px-4 max-w-xs truncate">
+          <a href="${escapeHtml(v.objectUrl || v.source)}" target="_blank" rel="noopener noreferrer" class="text-orange-700 hover:text-orange-600 hover:underline font-bold text-sm sm:text-base break-all">
             ${escapeHtml(v.source)}
           </a>
         </td>
-        <td class="py-3 px-4 text-xs text-slate-600 font-medium">${durationDisplay}</td>
-        <td class="py-3 px-4">
+        <td class="py-4 px-4 text-sm sm:text-base text-slate-700 font-bold">${durationDisplay}</td>
+        <td class="py-4 px-4">
           <input type="text" data-idx="${idx}" data-field="notes" value="${escapeHtml(v.notes)}"
             placeholder="可補充影片觀察重點供 AI 評分參考..."
-            class="video-edit-input w-full bg-slate-50/70 border border-slate-200 hover:border-slate-300 focus:border-indigo-500 focus:bg-white rounded-lg px-2.5 py-1 text-xs text-slate-700 focus:outline-none">
+            class="video-edit-input w-full bg-amber-50/40 border-2 border-slate-200 hover:border-amber-300 focus:border-orange-500 focus:bg-white rounded-xl px-3 py-1.5 text-sm sm:text-base font-medium text-slate-800 focus:outline-none">
         </td>
-        <td class="py-3 px-4 text-center">${statusBadge}</td>
-        <td class="py-3 px-3 text-center">
-          <div class="inline-flex items-center gap-1">
-            <button type="button" onclick="openDetailModal(${idx})" class="p-1.5 rounded-lg text-indigo-600 hover:bg-indigo-50 transition cursor-pointer" title="檢視/微調評分">
-              <i data-lucide="sliders" class="w-4 h-4"></i>
+        <td class="py-4 px-4 text-center">${statusBadge}</td>
+        <td class="py-4 px-3 text-center">
+          <div class="inline-flex items-center gap-1.5">
+            <button type="button" onclick="openDetailModal(${idx})" class="p-2 rounded-xl text-orange-600 hover:bg-orange-50 transition cursor-pointer" title="檢視/微調評分">
+              <i data-lucide="sliders" class="w-5 h-5"></i>
             </button>
-            <button type="button" onclick="removeVideoItem(${idx})" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer" title="移除">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            <button type="button" onclick="removeVideoItem(${idx})" class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer" title="移除">
+              <i data-lucide="trash-2" class="w-5 h-5"></i>
             </button>
           </div>
         </td>
@@ -1306,29 +1314,29 @@ function renderResultsTable() {
   const criteriaHeaders = state.rubric.criteria
     .map(
       (c) => `
-      <th class="py-3.5 px-3 font-bold text-center bg-indigo-950/90 text-indigo-100 border-x border-indigo-800/40 min-w-[115px]">
-        <div class="text-xs leading-tight">${escapeHtml(c.name)}</div>
-        <div class="text-[11px] font-normal text-indigo-300 mt-0.5">(${c.weight}分)</div>
+      <th class="py-4 px-3 font-extrabold text-center bg-slate-800 text-amber-200 border-x border-slate-700 min-w-[130px]">
+        <div class="text-sm sm:text-base leading-snug">${escapeHtml(c.name)}</div>
+        <div class="text-xs sm:text-sm font-bold text-orange-300 mt-0.5">(${c.weight}分)</div>
       </th>
     `
     )
     .join('');
 
   thead.innerHTML = `
-    <tr class="bg-slate-900 text-white text-xs">
-      <th class="py-3.5 px-4 font-bold w-20">序號</th>
-      <th class="py-3.5 px-4 font-bold min-w-[200px]">影片網址 / 檔案名稱</th>
+    <tr class="bg-slate-900 text-white text-sm sm:text-base">
+      <th class="py-4 px-4 font-extrabold w-20">序號</th>
+      <th class="py-4 px-4 font-extrabold min-w-[210px]">影片網址 / 檔案名稱</th>
       ${criteriaHeaders}
-      <th class="py-3.5 px-4 font-extrabold text-center bg-emerald-900 text-emerald-100 w-24">總分</th>
-      <th class="py-3.5 px-4 font-bold min-w-[280px]">綜合評語 (可點擊微調)</th>
-      <th class="py-3.5 px-3 font-bold text-center w-24">詳細/調整</th>
+      <th class="py-4 px-4 font-black text-center bg-teal-900 text-teal-100 w-28">總分</th>
+      <th class="py-4 px-4 font-extrabold min-w-[320px]">綜合評語 (可點擊微調)</th>
+      <th class="py-4 px-3 font-extrabold text-center w-28">詳細/調整</th>
     </tr>
   `;
 
   if (state.videos.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="${state.rubric.criteria.length + 5}" class="py-12 text-center text-slate-400">
+        <td colspan="${state.rubric.criteria.length + 5}" class="py-12 text-center text-slate-500 text-base font-medium">
           尚無評分資料，請先於「功能三」加入影片或上傳 Excel 清單。
         </td>
       </tr>
@@ -1346,23 +1354,23 @@ function renderResultsTable() {
           const pct = val !== undefined ? val / (c.weight || 1) : 0;
           const badgeColor =
             val === undefined
-              ? 'text-slate-400'
+              ? 'text-slate-400 border-slate-200'
               : pct >= 0.9
-              ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+              ? 'text-emerald-800 bg-emerald-100 border-emerald-300'
               : pct >= 0.75
-              ? 'text-indigo-700 bg-indigo-50 border-indigo-200'
+              ? 'text-sky-800 bg-sky-100 border-sky-300'
               : pct >= 0.6
-              ? 'text-amber-700 bg-amber-50 border-amber-200'
-              : 'text-rose-700 bg-rose-50 border-rose-200';
+              ? 'text-amber-800 bg-amber-100 border-amber-300'
+              : 'text-rose-800 bg-rose-100 border-rose-300';
 
           return `
-            <td class="py-3.5 px-3 text-center align-top">
-              <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-xs font-extrabold border ${badgeColor}">
+            <td class="py-4 px-3 text-center align-top">
+              <span class="inline-flex items-center justify-center px-3 py-1 rounded-xl text-base font-black border-2 ${badgeColor}">
                 ${displayVal}
               </span>
               ${
                 v.itemComments?.[c.id]
-                  ? `<p class="text-[11px] text-slate-500 mt-1 line-clamp-2 text-left leading-snug" title="${escapeHtml(v.itemComments[c.id])}">${escapeHtml(v.itemComments[c.id])}</p>`
+                  ? `<p class="text-xs sm:text-sm font-medium text-slate-600 mt-1.5 line-clamp-2 text-left leading-snug" title="${escapeHtml(v.itemComments[c.id])}">${escapeHtml(v.itemComments[c.id])}</p>`
                   : ''
               }
             </td>
@@ -1372,34 +1380,34 @@ function renderResultsTable() {
 
       const totalBadge =
         v.totalScore !== null && v.totalScore !== undefined
-          ? `<span class="inline-flex items-center justify-center px-3 py-1 rounded-xl text-base font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-2xs">${v.totalScore}</span>`
-          : `<span class="text-xs text-slate-400">未評分</span>`;
+          ? `<span class="inline-flex items-center justify-center px-3.5 py-1.5 rounded-2xl text-xl font-black bg-emerald-100 text-emerald-900 border-2 border-emerald-400 shadow-xs">${v.totalScore}</span>`
+          : `<span class="text-sm font-bold text-slate-400">未評分</span>`;
 
       return `
-        <tr class="hover:bg-slate-50/90 transition">
-          <td class="py-3.5 px-4 font-bold text-slate-900 align-top">${escapeHtml(v.seq)}</td>
-          <td class="py-3.5 px-4 align-top max-w-[230px]">
-            <a href="${escapeHtml(v.objectUrl || v.source)}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline font-semibold text-xs sm:text-sm break-all line-clamp-2">
+        <tr class="hover:bg-amber-50/40 transition">
+          <td class="py-4 px-4 font-black text-lg text-slate-900 align-top">${escapeHtml(v.seq)}</td>
+          <td class="py-4 px-4 align-top max-w-[240px]">
+            <a href="${escapeHtml(v.objectUrl || v.source)}" target="_blank" rel="noopener noreferrer" class="text-orange-700 hover:text-orange-600 hover:underline font-bold text-sm sm:text-base break-all line-clamp-2">
               ${escapeHtml(v.source)}
             </a>
             ${
               v.durationSec
-                ? `<span class="inline-block mt-1 text-[11px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">片長：${v.durationSec}秒</span>`
+                ? `<span class="inline-block mt-1.5 text-xs sm:text-sm font-bold px-2.5 py-0.5 rounded-lg bg-amber-100 text-orange-900 border border-amber-300">⏱️ 片長：${v.durationSec}秒</span>`
                 : ''
             }
           </td>
           ${criterionCells}
-          <td class="py-3.5 px-4 text-center align-top bg-emerald-50/30">${totalBadge}</td>
-          <td class="py-3.5 px-4 align-top text-xs text-slate-700 leading-relaxed max-w-md">
+          <td class="py-4 px-4 text-center align-top bg-emerald-50/40">${totalBadge}</td>
+          <td class="py-4 px-4 align-top text-sm sm:text-base font-medium text-slate-800 leading-relaxed max-w-md">
             ${
               v.overallComment
-                ? `<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">${escapeHtml(v.overallComment)}</div>`
+                ? `<div class="p-3.5 rounded-2xl bg-amber-50/60 border-2 border-amber-200/80 text-slate-900">${escapeHtml(v.overallComment)}</div>`
                 : `<span class="text-slate-400 italic">點擊上方「依 Rubrics 執行 AI 評分」自動產出評語</span>`
             }
           </td>
-          <td class="py-3.5 px-3 text-center align-top">
-            <button type="button" onclick="openDetailModal(${idx})" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 transition cursor-pointer">
-              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+          <td class="py-4 px-3 text-center align-top">
+            <button type="button" onclick="openDetailModal(${idx})" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-extrabold text-orange-800 bg-amber-100 hover:bg-amber-200 border-2 border-amber-300 transition cursor-pointer shadow-2xs">
+              <i data-lucide="edit-3" class="w-4 h-4 text-orange-600"></i>
               <span>微調</span>
             </button>
           </td>
@@ -1584,28 +1592,28 @@ window.openDetailModal = function (idx) {
       const scoreVal = video.scores?.[c.id] ?? Math.round(c.weight * 0.85);
       const commentVal = video.itemComments?.[c.id] || '';
       return `
-        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+        <div class="p-4 rounded-2xl bg-amber-50/50 border-2 border-amber-200 space-y-2.5">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-sm font-bold text-slate-900">${escapeHtml(c.name)}</span>
-              <span class="ml-1.5 px-2 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-800">配分上限：${c.weight} 分</span>
+              <span class="text-base font-black text-slate-900">${escapeHtml(c.name)}</span>
+              <span class="ml-2 px-2.5 py-0.5 rounded-lg text-xs sm:text-sm font-extrabold bg-orange-100 text-orange-800 border border-orange-300">配分上限：${c.weight} 分</span>
             </div>
             <div class="flex items-center gap-2">
-              <label class="text-xs font-bold text-slate-600">給分：</label>
+              <label class="text-sm font-extrabold text-slate-700">給分：</label>
               <input type="number" min="0" max="${c.weight}" data-cid="${c.id}" value="${scoreVal}"
-                class="detail-score-input w-20 text-center font-extrabold text-indigo-700 bg-white border border-indigo-300 rounded-xl px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <span class="text-xs text-slate-500">/ ${c.weight}</span>
+                class="detail-score-input w-20 text-center font-black text-orange-800 bg-white border-2 border-orange-400 rounded-xl px-2.5 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-orange-500">
+              <span class="text-sm font-bold text-slate-600">/ ${c.weight}</span>
             </div>
           </div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[11px] text-slate-600 pt-1">
-            <div class="p-1.5 rounded bg-white border border-slate-200/80"><strong class="text-emerald-700">優秀:</strong> ${escapeHtml(c.excellent)}</div>
-            <div class="p-1.5 rounded bg-white border border-slate-200/80"><strong class="text-indigo-700">良好:</strong> ${escapeHtml(c.good)}</div>
-            <div class="p-1.5 rounded bg-white border border-slate-200/80"><strong class="text-amber-700">基礎:</strong> ${escapeHtml(c.basic)}</div>
-            <div class="p-1.5 rounded bg-white border border-slate-200/80"><strong class="text-rose-700">待加強:</strong> ${escapeHtml(c.needsImprovement)}</div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs sm:text-sm text-slate-700 pt-1">
+            <div class="p-2 rounded-xl bg-white border border-slate-200"><strong class="text-emerald-700">優秀:</strong> ${escapeHtml(c.excellent)}</div>
+            <div class="p-2 rounded-xl bg-white border border-slate-200"><strong class="text-sky-700">良好:</strong> ${escapeHtml(c.good)}</div>
+            <div class="p-2 rounded-xl bg-white border border-slate-200"><strong class="text-amber-700">基礎:</strong> ${escapeHtml(c.basic)}</div>
+            <div class="p-2 rounded-xl bg-white border border-slate-200"><strong class="text-rose-700">待加強:</strong> ${escapeHtml(c.needsImprovement)}</div>
           </div>
           <div>
             <input type="text" data-cid="${c.id}" value="${escapeHtml(commentVal)}" placeholder="本項評分說明..."
-              class="detail-item-comment-input w-full mt-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              class="detail-item-comment-input w-full mt-1 px-3.5 py-2 rounded-xl border-2 border-slate-200 bg-white text-sm sm:text-base font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-400">
           </div>
         </div>
       `;
@@ -1613,35 +1621,35 @@ window.openDetailModal = function (idx) {
     .join('');
 
   bodyEl.innerHTML = `
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-      <div class="lg:col-span-5 space-y-3">
-        <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-950 aspect-video flex items-center justify-center">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-5 space-y-4">
+        <div class="rounded-2xl overflow-hidden border-2 border-slate-200 bg-slate-950 aspect-video flex items-center justify-center">
           ${embedHtml}
         </div>
-        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1.5">
+        <div class="p-4 rounded-2xl bg-amber-50/60 border-2 border-amber-200 text-sm space-y-2">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-slate-700">影片來源：</span>
-            <a href="${escapeHtml(video.objectUrl || video.source)}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline truncate max-w-[220px]">開啟原始連結 ↗</a>
+            <span class="font-extrabold text-slate-800">影片來源：</span>
+            <a href="${escapeHtml(video.objectUrl || video.source)}" target="_blank" rel="noopener noreferrer" class="text-orange-700 font-bold hover:underline truncate max-w-[220px]">開啟原始連結 ↗</a>
           </div>
           <div>
-            <label class="block font-bold text-slate-700 mb-1">作品觀察備註：</label>
-            <textarea id="detailVideoNotes" rows="3" class="w-full rounded-lg border border-slate-200 bg-white p-2 text-xs text-slate-700">${escapeHtml(video.notes)}</textarea>
+            <label class="block font-extrabold text-slate-800 mb-1">作品觀察備註：</label>
+            <textarea id="detailVideoNotes" rows="3" class="w-full rounded-xl border-2 border-slate-200 bg-white p-2.5 text-sm sm:text-base font-medium text-slate-800">${escapeHtml(video.notes)}</textarea>
           </div>
         </div>
       </div>
-      <div class="lg:col-span-7 space-y-3">
+      <div class="lg:col-span-7 space-y-3.5">
         <div class="flex items-center justify-between">
-          <h4 class="text-sm font-bold text-slate-900">Rubrics 逐項評分明細</h4>
-          <span id="detailLiveTotal" class="px-3 py-1 rounded-full text-sm font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
+          <h4 class="text-base sm:text-lg font-black text-slate-900">Rubrics 逐項評分明細</h4>
+          <span id="detailLiveTotal" class="px-3.5 py-1 rounded-full text-base font-black bg-emerald-100 text-emerald-900 border-2 border-emerald-300">
             目前總分：${video.totalScore ?? 0} 分
           </span>
         </div>
-        <div class="space-y-2.5 max-h-[340px] overflow-y-auto pr-1">
+        <div class="space-y-3 max-h-[360px] overflow-y-auto pr-1">
           ${criteriaInputsHtml}
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-800 mb-1">綜合評語 (將匯出至 Excel 報表)</label>
-          <textarea id="detailOverallComment" rows="3" class="w-full rounded-xl border border-slate-200 bg-white p-3 text-xs sm:text-sm text-slate-800 leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500">${escapeHtml(video.overallComment)}</textarea>
+          <label class="block text-sm sm:text-base font-extrabold text-slate-900 mb-1">綜合評語 (將匯出至 Excel 報表)</label>
+          <textarea id="detailOverallComment" rows="3" class="w-full rounded-xl border-2 border-slate-300 bg-white p-3.5 text-base font-medium text-slate-900 leading-relaxed focus:outline-none focus:ring-2 focus:ring-orange-400">${escapeHtml(video.overallComment)}</textarea>
         </div>
       </div>
     </div>

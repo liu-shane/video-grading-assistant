@@ -1,48 +1,101 @@
-/* Custom styling & micro-interactions for 影片評分小幫手 */
+/* Custom styling & Youthful Vibrant Theme for 影片評分小幫手 */
 
 html {
   scroll-behavior: smooth;
+  font-size: 16.5px; /* 適度放大全域基準字級，確保清晰易讀 */
+}
+
+/* 青春有朝氣的陽光暖色與清爽薄荷漸層背景 */
+.youthful-bg {
+  background-color: #fffbeb;
+  background-image:
+    radial-gradient(at 8% 12%, rgba(254, 215, 170, 0.65) 0px, transparent 48%),
+    radial-gradient(at 92% 15%, rgba(167, 243, 208, 0.55) 0px, transparent 45%),
+    radial-gradient(at 85% 88%, rgba(253, 230, 138, 0.6) 0px, transparent 50%),
+    radial-gradient(at 15% 85%, rgba(186, 230, 253, 0.55) 0px, transparent 48%),
+    linear-gradient(135deg, #fffdf5 0%, #fff7ed 48%, #f0fdfa 100%);
+  background-attachment: fixed;
+}
+
+/* 柔和裝飾光暈 */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.42;
+}
+
+.blob-1 {
+  width: 420px;
+  height: 420px;
+  top: -90px;
+  left: -80px;
+  background: linear-gradient(135deg, #fb923c, #facc15);
+}
+
+.blob-2 {
+  width: 380px;
+  height: 380px;
+  top: 22%;
+  right: -90px;
+  background: linear-gradient(135deg, #2dd4bf, #38bdf8);
+}
+
+.blob-3 {
+  width: 400px;
+  height: 400px;
+  bottom: -100px;
+  left: 28%;
+  background: linear-gradient(135deg, #fda4af, #fde047);
+}
+
+/* 清晰的高對比文字與表單控制項 */
+textarea,
+input,
+select {
+  letter-spacing: 0.015em;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #fef3c7;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #fb923c;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #ea580c;
 }
 
 /* Dragover visual state */
 .drag-over {
-  border-color: #4f46e5 !important;
-  background-color: rgba(238, 242, 255, 0.7) !important;
-  transform: scale(1.005);
+  border-color: #f97316 !important;
+  background-color: rgba(255, 237, 213, 0.85) !important;
+  transform: scale(1.01);
 }
 
 /* Step Tab Active States */
 .step-tab.active {
-  border-color: #4f46e5;
-  background-color: #ffffff;
-  box-shadow: 0 4px 14px -3px rgba(79, 70, 229, 0.14);
+  border-color: #f97316 !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 10px 24px -6px rgba(249, 115, 22, 0.22);
+  transform: translateY(-2px);
 }
 
 /* Subtle fade-in animation for panels */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -51,5 +104,5 @@ html {
 }
 
 .step-panel:not(.hidden) {
-  animation: fadeIn 0.2s ease-out;
+  animation: fadeIn 0.22s ease-out;
 }

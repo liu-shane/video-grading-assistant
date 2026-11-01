@@ -7,7 +7,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
@@ -26,17 +26,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-              900: '#1e1b4b',
-            }
+            sans: ['"Noto Sans TC"', '"Plus Jakarta Sans"', 'sans-serif'],
           }
         }
       }
@@ -44,39 +34,48 @@
   </script>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+<body class="youthful-bg text-slate-900 min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
+
+  <!-- Decorative Youthful Blobs -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
 
   <!-- Top Navigation Header -->
-  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+  <header class="sticky top-0 z-30 bg-white/85 backdrop-blur-lg border-b-2 border-amber-200/80 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       <!-- Brand Logo & Title -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-purple-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-          <i data-lucide="clapperboard" class="w-5 h-5"></i>
+      <div class="flex items-center gap-4">
+        <div class="w-13 h-13 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-orange-500/25 p-3">
+          <i data-lucide="clapperboard" class="w-7 h-7"></i>
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-indigo-950 to-indigo-700 bg-clip-text text-transparent">
+          <div class="flex items-center gap-2.5">
+            <h1 class="text-2xl sm:text-3xl font-black tracking-tight bg-gradient-to-r from-orange-600 via-rose-600 to-teal-600 bg-clip-text text-transparent">
               影片評分小幫手
             </h1>
-            <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/60">
-              AI 輔助評量系統
+            <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-gradient-to-r from-amber-100 to-orange-100 text-orange-800 border border-orange-300/70 shadow-2xs">
+              🌟 AI 智慧影音評量平台
             </span>
           </div>
-          <p class="text-xs text-slate-500 hidden sm:block">上傳製作說明、評分 Rubrics 與影片清單，一鍵產出結構化評分與 Excel 報表</p>
+          <p class="text-sm sm:text-base font-medium text-slate-600 hidden sm:block mt-0.5">
+            上傳製作說明、評分 Rubrics 與影片清單，一鍵產出結構化評分與 Excel 報表
+          </p>
         </div>
       </div>
 
       <!-- Right Action Buttons -->
-      <div class="flex items-center gap-2.5">
-        <button id="btnLoadDefaultDemo" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 border border-indigo-200/60 transition cursor-pointer" title="載入「設計你的人生：期中報告」預設說明與 Rubrics">
-          <i data-lucide="sparkles" class="w-4 h-4 text-indigo-600"></i>
+      <div class="flex items-center gap-3">
+        <button id="btnLoadDefaultDemo" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm sm:text-base font-bold text-orange-800 bg-amber-100/90 hover:bg-amber-200 border-2 border-amber-300/80 transition shadow-2xs cursor-pointer" title="載入「設計你的人生：期中報告」預設說明與 Rubrics">
+          <i data-lucide="sparkles" class="w-5 h-5 text-orange-600"></i>
           <span>載入期中範例資料</span>
         </button>
 
-        <button id="btnOpenApiModal" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition cursor-pointer">
-          <span id="apiStatusDot" class="w-2 h-2 rounded-full bg-amber-400"></span>
-          <i data-lucide="key-round" class="w-4 h-4 text-slate-500"></i>
+        <button id="btnOpenApiModal" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm sm:text-base font-bold text-slate-800 bg-white hover:bg-teal-50 border-2 border-slate-200 hover:border-teal-300 shadow-2xs transition cursor-pointer">
+          <span id="apiStatusDot" class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
+          <i data-lucide="key-round" class="w-5 h-5 text-teal-600"></i>
           <span>AI 評分設定</span>
         </button>
       </div>
@@ -84,68 +83,68 @@
   </header>
 
   <!-- Main Workspace Container -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
     <!-- 4-Step Navigation Bar -->
-    <nav aria-label="功能步驟導覽" class="mb-6">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <nav aria-label="功能步驟導覽" class="mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Tab 1 -->
-        <button type="button" data-tab="step1" class="step-tab active group relative flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border-2 border-indigo-600 shadow-sm text-left transition-all cursor-pointer">
-          <div class="step-icon w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0 shadow-xs transition-colors">
-            <i data-lucide="file-text" class="w-5 h-5"></i>
+        <button type="button" data-tab="step1" class="step-tab active group relative flex items-center gap-4 p-4 rounded-2xl bg-white/95 border-2 border-orange-500 shadow-md text-left transition-all cursor-pointer">
+          <div class="step-icon w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm transition-all">
+            <i data-lucide="file-text" class="w-6 h-6"></i>
           </div>
           <div class="min-w-0 flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">功能一</span>
-              <span id="badgeStep1" class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">已載入</span>
+              <span class="step-label text-xs sm:text-sm font-extrabold uppercase tracking-wider text-orange-600">功能一</span>
+              <span id="badgeStep1" class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">已備妥</span>
             </div>
-            <p class="text-sm font-bold text-slate-900 truncate mt-0.5">1. 影片製作內容說明</p>
-            <p class="text-xs text-slate-500 truncate">圖檔 / Word / PDF 說明</p>
+            <p class="text-base sm:text-lg font-extrabold text-slate-900 truncate mt-0.5">1. 影片製作說明</p>
+            <p class="text-xs sm:text-sm font-medium text-slate-600 truncate">圖檔 / Word / PDF 說明</p>
           </div>
         </button>
 
         <!-- Tab 2 -->
-        <button type="button" data-tab="step2" class="step-tab group relative flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border-2 border-slate-200/80 hover:border-indigo-300 shadow-2xs text-left transition-all cursor-pointer">
-          <div class="step-icon w-10 h-10 rounded-xl bg-slate-100 text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600 flex items-center justify-center font-bold shrink-0 transition-colors">
-            <i data-lucide="table-properties" class="w-5 h-5"></i>
+        <button type="button" data-tab="step2" class="step-tab group relative flex items-center gap-4 p-4 rounded-2xl bg-white/90 border-2 border-amber-200 hover:border-orange-400 shadow-xs text-left transition-all cursor-pointer">
+          <div class="step-icon w-12 h-12 rounded-2xl bg-amber-100 text-orange-700 group-hover:bg-orange-500 group-hover:text-white flex items-center justify-center font-bold shrink-0 transition-all">
+            <i data-lucide="table-properties" class="w-6 h-6"></i>
           </div>
           <div class="min-w-0 flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-400 group-hover:text-indigo-600">功能二</span>
-              <span id="badgeStep2" class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">5 項指標</span>
+              <span class="step-label text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-500 group-hover:text-orange-600">功能二</span>
+              <span id="badgeStep2" class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">5 項指標</span>
             </div>
-            <p class="text-sm font-bold text-slate-900 truncate mt-0.5">2. 上傳評分 Rubrics</p>
-            <p class="text-xs text-slate-500 truncate">圖檔 / Word / PDF 評分表</p>
+            <p class="text-base sm:text-lg font-extrabold text-slate-900 truncate mt-0.5">2. 評分 Rubrics</p>
+            <p class="text-xs sm:text-sm font-medium text-slate-600 truncate">圖檔 / Word / PDF 評分表</p>
           </div>
         </button>
 
         <!-- Tab 3 -->
-        <button type="button" data-tab="step3" class="step-tab group relative flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border-2 border-slate-200/80 hover:border-indigo-300 shadow-2xs text-left transition-all cursor-pointer">
-          <div class="step-icon w-10 h-10 rounded-xl bg-slate-100 text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600 flex items-center justify-center font-bold shrink-0 transition-colors">
-            <i data-lucide="video" class="w-5 h-5"></i>
+        <button type="button" data-tab="step3" class="step-tab group relative flex items-center gap-4 p-4 rounded-2xl bg-white/90 border-2 border-amber-200 hover:border-orange-400 shadow-xs text-left transition-all cursor-pointer">
+          <div class="step-icon w-12 h-12 rounded-2xl bg-amber-100 text-orange-700 group-hover:bg-orange-500 group-hover:text-white flex items-center justify-center font-bold shrink-0 transition-all">
+            <i data-lucide="video" class="w-6 h-6"></i>
           </div>
           <div class="min-w-0 flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-400 group-hover:text-indigo-600">功能三</span>
-              <span id="badgeStep3" class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600">0 部影片</span>
+              <span class="step-label text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-500 group-hover:text-orange-600">功能三</span>
+              <span id="badgeStep3" class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-sky-100 text-sky-800 border border-sky-300">3 部影片</span>
             </div>
-            <p class="text-sm font-bold text-slate-900 truncate mt-0.5">3. 提供影片或網址清單</p>
-            <p class="text-xs text-slate-500 truncate">單一影片 / 網址 / Excel 批次</p>
+            <p class="text-base sm:text-lg font-extrabold text-slate-900 truncate mt-0.5">3. 提供影片或網址</p>
+            <p class="text-xs sm:text-sm font-medium text-slate-600 truncate">單一影片 / 網址 / Excel 批次</p>
           </div>
         </button>
 
         <!-- Tab 4 -->
-        <button type="button" data-tab="step4" class="step-tab group relative flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border-2 border-slate-200/80 hover:border-indigo-300 shadow-2xs text-left transition-all cursor-pointer">
-          <div class="step-icon w-10 h-10 rounded-xl bg-slate-100 text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600 flex items-center justify-center font-bold shrink-0 transition-colors">
-            <i data-lucide="award" class="w-5 h-5"></i>
+        <button type="button" data-tab="step4" class="step-tab group relative flex items-center gap-4 p-4 rounded-2xl bg-white/90 border-2 border-amber-200 hover:border-orange-400 shadow-xs text-left transition-all cursor-pointer">
+          <div class="step-icon w-12 h-12 rounded-2xl bg-amber-100 text-orange-700 group-hover:bg-orange-500 group-hover:text-white flex items-center justify-center font-bold shrink-0 transition-all">
+            <i data-lucide="award" class="w-6 h-6"></i>
           </div>
           <div class="min-w-0 flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-400 group-hover:text-indigo-600">功能四</span>
-              <span id="badgeStep4" class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-indigo-50 text-indigo-700">Excel 下載</span>
+              <span class="step-label text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-500 group-hover:text-orange-600">功能四</span>
+              <span id="badgeStep4" class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-teal-100 text-teal-800 border border-teal-300">Excel 下載</span>
             </div>
-            <p class="text-sm font-bold text-slate-900 truncate mt-0.5">4. 評分結果與匯出</p>
-            <p class="text-xs text-slate-500 truncate">分項得分、總分、評語與匯出</p>
+            <p class="text-base sm:text-lg font-extrabold text-slate-900 truncate mt-0.5">4. 評分結果與下載</p>
+            <p class="text-xs sm:text-sm font-medium text-slate-600 truncate">分項得分、總分、評語與匯出</p>
           </div>
         </button>
       </div>
@@ -155,82 +154,85 @@
          STEP 1: 影片製作內容說明 (圖檔 / Word / PDF)
          ========================================== -->
     <section id="panel-step1" class="step-panel space-y-6">
-      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-slate-50/80 to-indigo-50/30">
+      <div class="bg-white/95 rounded-3xl border-2 border-amber-200/90 shadow-lg overflow-hidden">
+        <div class="p-6 sm:p-7 border-b-2 border-amber-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-gradient-to-r from-amber-50 via-orange-50/70 to-teal-50/60">
           <div>
-            <div class="inline-flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs sm:text-sm font-extrabold uppercase tracking-wider mb-2">
               <i data-lucide="file-check-2" class="w-4 h-4"></i>
               <span>Step 1 · 影片製作內容說明</span>
             </div>
-            <h2 class="text-xl font-bold text-slate-900">上傳影片製作內容說明檔案</h2>
-            <p class="text-sm text-slate-600 mt-0.5">支援上傳 <strong class="text-slate-800">圖檔 (.jpg, .png, .webp)</strong>、<strong class="text-slate-800">Word 檔 (.docx)</strong> 或 <strong class="text-slate-800">PDF 檔 (.pdf)</strong>，系統會自動解析內容作為評分依據。</p>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">上傳影片製作內容說明檔案</h2>
+            <p class="text-base sm:text-lg font-medium text-slate-700 mt-1">
+              支援上傳 <strong class="text-orange-700 underline decoration-orange-300 decoration-2">圖檔 (.jpg, .png)</strong>、<strong class="text-orange-700 underline decoration-orange-300 decoration-2">Word 檔 (.docx)</strong> 或 <strong class="text-orange-700 underline decoration-orange-300 decoration-2">PDF 檔 (.pdf)</strong>，系統會自動解析內容作為評分依據。
+            </p>
           </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <button type="button" id="btnResetGuidelineDefault" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/60 transition cursor-pointer">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-              <span>載入預設「設計思考期中影片製作說明.jpg」</span>
+          <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <button type="button" id="btnResetGuidelineDefault" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm sm:text-base font-bold text-orange-800 bg-white hover:bg-amber-50 border-2 border-amber-300 transition cursor-pointer shadow-2xs">
+              <i data-lucide="rotate-ccw" class="w-4 h-4 text-orange-600"></i>
+              <span>載入預設「期中影片製作說明.jpg」</span>
             </button>
-            <button type="button" onclick="switchTab('step2')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer">
+            <button type="button" onclick="switchTab('step2')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm sm:text-base font-bold text-white bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 shadow-md transition cursor-pointer">
               <span>下一步：評分 Rubrics</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
             </button>
           </div>
         </div>
 
-        <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="p-6 sm:p-7 grid grid-cols-1 lg:grid-cols-12 gap-7">
           <!-- Left Column: File Upload & Preview -->
-          <div class="lg:col-span-6 space-y-4">
-            <label for="inputGuidelineFile" id="dropzoneGuideline" class="group relative flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-2xl bg-slate-50/60 hover:bg-indigo-50/20 transition-all cursor-pointer text-center">
+          <div class="lg:col-span-6 space-y-5">
+            <label for="inputGuidelineFile" id="dropzoneGuideline" class="group relative flex flex-col items-center justify-center p-7 border-3 border-dashed border-amber-400 hover:border-orange-500 rounded-3xl bg-amber-50/50 hover:bg-orange-50/60 transition-all cursor-pointer text-center">
               <input id="inputGuidelineFile" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.docx,.doc" class="sr-only">
-              <div class="w-12 h-12 rounded-2xl bg-indigo-100/80 text-indigo-600 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-                <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 text-white flex items-center justify-center mb-3.5 shadow-md group-hover:scale-105 transition-transform">
+                <i data-lucide="upload-cloud" class="w-8 h-8"></i>
               </div>
-              <p class="text-sm font-bold text-slate-800">點擊選擇檔案，或將檔案拖曳至此處</p>
-              <p class="text-xs text-slate-500 mt-1">支援格式：圖片 (JPG/PNG)、Word (.docx)、PDF (.pdf)</p>
-              <div class="mt-3 flex flex-wrap justify-center gap-1.5">
-                <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-white border border-slate-200 text-slate-600">🖼️ 圖檔預覽與 AI 視覺辨識</span>
-                <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-white border border-slate-200 text-slate-600">📄 Word 自動擷取文字</span>
-                <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-white border border-slate-200 text-slate-600">📑 PDF 自動擷取文字</span>
+              <p class="text-lg sm:text-xl font-extrabold text-slate-900">點擊選擇檔案，或將檔案拖曳至此處</p>
+              <p class="text-sm sm:text-base font-medium text-slate-600 mt-1">支援格式：圖片 (JPG / PNG)、Word (.docx)、PDF (.pdf)</p>
+              <div class="mt-4 flex flex-wrap justify-center gap-2">
+                <span class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold bg-white border border-amber-300 text-slate-800 shadow-2xs">🖼️ 圖檔預覽與 AI 辨識</span>
+                <span class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold bg-white border border-amber-300 text-slate-800 shadow-2xs">📄 Word 自動擷取文字</span>
+                <span class="px-3 py-1 rounded-lg text-xs sm:text-sm font-bold bg-white border border-amber-300 text-slate-800 shadow-2xs">📑 PDF 自動擷取文字</span>
               </div>
             </label>
 
             <!-- Uploaded File Preview Card -->
-            <div class="rounded-2xl border border-slate-200 bg-slate-50/50 overflow-hidden">
-              <div class="px-4 py-2.5 bg-slate-100/80 border-b border-slate-200 flex items-center justify-between">
+            <div class="rounded-2xl border-2 border-slate-200 bg-white overflow-hidden shadow-xs">
+              <div class="px-4 py-3 bg-amber-50/90 border-b border-amber-200 flex items-center justify-between">
                 <div class="flex items-center gap-2 min-w-0">
-                  <i data-lucide="eye" class="w-4 h-4 text-indigo-600 shrink-0"></i>
-                  <span id="guidelineFileName" class="text-xs font-bold text-slate-700 truncate">設計思考期中影片製作說明.jpg (預設載入)</span>
+                  <i data-lucide="eye" class="w-5 h-5 text-orange-600 shrink-0"></i>
+                  <span id="guidelineFileName" class="text-sm sm:text-base font-extrabold text-slate-800 truncate">設計思考期中影片製作說明.jpg (預設載入)</span>
                 </div>
-                <span id="guidelineFileTypeBadge" class="px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-100 text-indigo-700">IMAGE</span>
+                <span id="guidelineFileTypeBadge" class="px-2.5 py-0.5 rounded-md text-xs font-extrabold bg-orange-500 text-white">IMAGE</span>
               </div>
-              <div id="guidelinePreviewContainer" class="p-4 flex items-center justify-center min-h-[260px] max-h-[420px] overflow-auto bg-white">
-                <img id="guidelinePreviewImg" src="設計思考期中影片製作說明.jpg" alt="影片製作內容說明預覽" class="max-h-[380px] w-auto object-contain rounded-lg shadow-xs border border-slate-100">
+              <div id="guidelinePreviewContainer" class="p-4 flex items-center justify-center min-h-[280px] max-h-[440px] overflow-auto bg-white">
+                <img id="guidelinePreviewImg" src="設計思考期中影片製作說明.jpg" alt="影片製作內容說明預覽" class="max-h-[400px] w-auto object-contain rounded-xl shadow-xs border border-slate-100">
               </div>
             </div>
           </div>
 
           <!-- Right Column: Parsed / Editable Guideline Content -->
           <div class="lg:col-span-6 flex flex-col">
-            <div class="flex items-center justify-between mb-2">
-              <label for="guidelineText" class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <i data-lucide="file-Code-2" class="w-4 h-4 text-indigo-600"></i>
+            <div class="flex items-center justify-between mb-2.5">
+              <label for="guidelineText" class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                <i data-lucide="file-code-2" class="w-5 h-5 text-orange-600"></i>
                 <span>影片製作規範與要求摘要（可編輯補充）</span>
               </label>
-              <button type="button" id="btnAiOcrGuideline" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/60 transition cursor-pointer" title="使用 Gemini AI 從上傳圖檔擷取說明文字">
-                <i data-lucide="wand-sparkles" class="w-3.5 h-3.5"></i>
+              <button type="button" id="btnAiOcrGuideline" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-sm font-bold text-orange-800 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition cursor-pointer" title="使用 Gemini AI 從上傳圖檔擷取說明文字">
+                <i data-lucide="wand-sparkles" class="w-4 h-4 text-orange-600"></i>
                 <span>AI 辨識圖檔文字</span>
               </button>
             </div>
-            <p class="text-xs text-slate-500 mb-3">當上傳 Word/PDF 時會自動提取文字；若上傳圖檔，可透過 AI 視覺辨識或直接於下方確認與修改製作要求（如片長規定、必備訪談人數、主題方向等）。</p>
-            <textarea id="guidelineText" rows="14" class="flex-1 w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-800 leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-2xs"></textarea>
+            <p class="text-sm sm:text-base font-medium text-slate-600 mb-3">
+              當上傳 Word / PDF 時會自動提取文字；若上傳圖檔，可透過 AI 視覺辨識或直接於下方確認與修改製作要求（如片長規定、必備訪談人數、主題方向等）。
+            </p>
+            <textarea id="guidelineText" rows="13" class="flex-1 w-full rounded-2xl border-2 border-slate-300 bg-white p-4 text-base sm:text-lg font-medium text-slate-900 leading-relaxed focus:outline-none focus:ring-4 focus:ring-orange-200 focus:border-orange-500 shadow-inner"></textarea>
             
             <!-- Key Requirements Quick Tags -->
-            <div class="mt-3 p-3.5 rounded-xl bg-indigo-50/60 border border-indigo-100 flex flex-wrap items-center gap-2 text-xs text-indigo-900">
-              <span class="font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-4 h-4 text-indigo-600"></i> 評分檢核重點：</span>
-              <span class="px-2 py-0.5 rounded-md bg-white border border-indigo-200/60">主題：你眼中的自己</span>
-              <span class="px-2 py-0.5 rounded-md bg-white border border-indigo-200/60">規範片長：90~120秒 (2分鐘內)</span>
-              <span class="px-2 py-0.5 rounded-md bg-white border border-indigo-200/60">必備元素：成長歷程 + 3位親友師長訪談</span>
-              <span class="px-2 py-0.5 rounded-md bg-white border border-indigo-200/60">核心目標：自我覺察與突破框架</span>
+            <div class="mt-4 p-4 rounded-2xl bg-gradient-to-r from-teal-50 to-emerald-50 border-2 border-teal-200 flex flex-wrap items-center gap-2.5 text-sm sm:text-base text-teal-950">
+              <span class="font-extrabold flex items-center gap-1.5 text-teal-800"><i data-lucide="check-circle-2" class="w-5 h-5 text-teal-600"></i> 評分檢核重點：</span>
+              <span class="px-3 py-1 rounded-lg bg-white font-bold border border-teal-300 shadow-2xs">🎯 主題：你眼中的自己</span>
+              <span class="px-3 py-1 rounded-lg bg-white font-bold border border-teal-300 shadow-2xs">⏱️ 片長：90~120秒 (2分鐘內)</span>
+              <span class="px-3 py-1 rounded-lg bg-white font-bold border border-teal-300 shadow-2xs">🎤 必備：成長歷程 + 3位親友師長訪談</span>
             </div>
           </div>
         </div>
@@ -241,95 +243,97 @@
          STEP 2: 影片評分 Rubrics (圖檔 / Word / PDF)
          ========================================== -->
     <section id="panel-step2" class="step-panel hidden space-y-6">
-      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-slate-50/80 to-indigo-50/30">
+      <div class="bg-white/95 rounded-3xl border-2 border-amber-200/90 shadow-lg overflow-hidden">
+        <div class="p-6 sm:p-7 border-b-2 border-amber-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-gradient-to-r from-amber-50 via-orange-50/70 to-teal-50/60">
           <div>
-            <div class="inline-flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs sm:text-sm font-extrabold uppercase tracking-wider mb-2">
               <i data-lucide="table-properties" class="w-4 h-4"></i>
               <span>Step 2 · 評分標準 Rubrics</span>
             </div>
-            <h2 class="text-xl font-bold text-slate-900">上傳影片評分 Rubrics</h2>
-            <p class="text-sm text-slate-600 mt-0.5">支援上傳 <strong class="text-slate-800">圖檔 (.png, .jpg)</strong>、<strong class="text-slate-800">Word 檔 (.docx)</strong> 或 <strong class="text-slate-800">PDF 檔 (.pdf)</strong>，系統將依各評量指標與配分進行逐項評分。</p>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">上傳影片評分 Rubrics</h2>
+            <p class="text-base sm:text-lg font-medium text-slate-700 mt-1">
+              支援上傳 <strong class="text-orange-700 underline decoration-orange-300 decoration-2">圖檔 (.png, .jpg)</strong>、<strong class="text-orange-700 underline decoration-orange-300 decoration-2">Word 檔 (.docx)</strong> 或 <strong class="text-orange-700 underline decoration-orange-300 decoration-2">PDF 檔 (.pdf)</strong>，系統將依各評量指標與配分進行逐項評分。
+            </p>
           </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <button type="button" id="btnResetRubricDefault" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/60 transition cursor-pointer">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <button type="button" id="btnResetRubricDefault" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm sm:text-base font-bold text-orange-800 bg-white hover:bg-amber-50 border-2 border-amber-300 transition cursor-pointer shadow-2xs">
+              <i data-lucide="rotate-ccw" class="w-4 h-4 text-orange-600"></i>
               <span>還原預設「期中影片評分 rubrics.png」</span>
             </button>
-            <button type="button" onclick="switchTab('step3')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer">
+            <button type="button" onclick="switchTab('step3')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm sm:text-base font-bold text-white bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 shadow-md transition cursor-pointer">
               <span>下一步：提供影片清單</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
             </button>
           </div>
         </div>
 
-        <div class="p-6 space-y-6">
+        <div class="p-6 sm:p-7 space-y-7">
           <!-- Top Upload & Image Preview Row -->
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             <div class="lg:col-span-5">
-              <label for="inputRubricFile" id="dropzoneRubric" class="group flex flex-col items-center justify-center p-5 border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-2xl bg-slate-50/60 hover:bg-indigo-50/20 transition-all cursor-pointer text-center">
+              <label for="inputRubricFile" id="dropzoneRubric" class="group flex flex-col items-center justify-center p-6 border-3 border-dashed border-amber-400 hover:border-orange-500 rounded-3xl bg-amber-50/50 hover:bg-orange-50/60 transition-all cursor-pointer text-center">
                 <input id="inputRubricFile" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.docx,.doc" class="sr-only">
-                <div class="w-11 h-11 rounded-2xl bg-indigo-100/80 text-indigo-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
-                  <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform">
+                  <i data-lucide="file-spreadsheet" class="w-7 h-7"></i>
                 </div>
-                <p class="text-sm font-bold text-slate-800">上傳評分 Rubrics 檔案 (圖檔 / Word / PDF)</p>
-                <p class="text-xs text-slate-500 mt-1">點擊或拖曳檔案至此，可自動解析或手動調整下方評分維度與配分</p>
+                <p class="text-lg font-extrabold text-slate-900">上傳評分 Rubrics 檔案 (圖檔 / Word / PDF)</p>
+                <p class="text-sm font-medium text-slate-600 mt-1">點擊或拖曳檔案至此，可自動解析或手動調整下方評分維度與配分</p>
               </label>
-              <div class="mt-3 flex items-center justify-between px-1">
-                <span class="text-xs text-slate-500">若上傳新圖檔或文件，可點選右側按鈕讓 AI 自動轉換成結構化表格：</span>
-                <button type="button" id="btnAiParseRubric" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/60 transition cursor-pointer shrink-0">
-                  <i data-lucide="wand-sparkles" class="w-3.5 h-3.5"></i>
+              <div class="mt-3.5 flex items-center justify-between gap-2 px-1">
+                <span class="text-sm font-medium text-slate-600">上傳新圖檔或文件後，可讓 AI 自動轉換成結構化表格：</span>
+                <button type="button" id="btnAiParseRubric" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-bold text-orange-800 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition cursor-pointer shrink-0">
+                  <i data-lucide="wand-sparkles" class="w-4 h-4 text-orange-600"></i>
                   <span>AI 自動解析 Rubrics</span>
                 </button>
               </div>
             </div>
 
-            <div class="lg:col-span-7 rounded-2xl border border-slate-200 bg-slate-50/50 overflow-hidden">
-              <div class="px-4 py-2 bg-slate-100/80 border-b border-slate-200 flex items-center justify-between">
+            <div class="lg:col-span-7 rounded-2xl border-2 border-slate-200 bg-white overflow-hidden shadow-xs">
+              <div class="px-4 py-2.5 bg-amber-50/90 border-b border-amber-200 flex items-center justify-between">
                 <div class="flex items-center gap-2 min-w-0">
-                  <i data-lucide="image" class="w-4 h-4 text-indigo-600 shrink-0"></i>
-                  <span id="rubricFileName" class="text-xs font-bold text-slate-700 truncate">設計思考期中影片評分rubrics.png (預設載入)</span>
+                  <i data-lucide="image" class="w-5 h-5 text-orange-600 shrink-0"></i>
+                  <span id="rubricFileName" class="text-sm sm:text-base font-extrabold text-slate-800 truncate">設計思考期中影片評分rubrics.png (預設載入)</span>
                 </div>
-                <span id="rubricFileTypeBadge" class="px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-100 text-indigo-700">IMAGE</span>
+                <span id="rubricFileTypeBadge" class="px-2.5 py-0.5 rounded-md text-xs font-extrabold bg-orange-500 text-white">IMAGE</span>
               </div>
-              <div id="rubricPreviewContainer" class="p-3 flex items-center justify-center max-h-[240px] overflow-auto bg-white">
-                <img id="rubricPreviewImg" src="設計思考期中影片評分rubrics.png" alt="影片評分 Rubrics 預覽" class="max-h-[210px] w-auto object-contain rounded shadow-2xs">
+              <div id="rubricPreviewContainer" class="p-4 flex items-center justify-center max-h-[250px] overflow-auto bg-white">
+                <img id="rubricPreviewImg" src="設計思考期中影片評分rubrics.png" alt="影片評分 Rubrics 預覽" class="max-h-[220px] w-auto object-contain rounded-lg shadow-2xs">
               </div>
             </div>
           </div>
 
           <!-- Structured Rubric Editor Table -->
-          <div class="space-y-3">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div class="flex items-center gap-3">
-                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <i data-lucide="sliders-horizontal" class="w-4 h-4 text-indigo-600"></i>
+                <h3 class="text-xl font-black text-slate-900 flex items-center gap-2">
+                  <i data-lucide="sliders-horizontal" class="w-5 h-5 text-orange-600"></i>
                   <span>結構化評量指標與配分設定</span>
                 </h3>
-                <span id="totalWeightBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                <span id="totalWeightBadge" class="px-3.5 py-1 rounded-full text-sm font-extrabold bg-emerald-100 text-emerald-900 border-2 border-emerald-300">
                   總配分：100 分
                 </span>
               </div>
-              <button type="button" id="btnAddCriterion" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition cursor-pointer self-start">
-                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <button type="button" id="btnAddCriterion" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm sm:text-base font-bold text-teal-900 bg-teal-100 hover:bg-teal-200 border-2 border-teal-300 transition cursor-pointer self-start">
+                <i data-lucide="plus-circle" class="w-5 h-5 text-teal-700"></i>
                 <span>新增評分項目</span>
               </button>
             </div>
 
-            <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-2xs">
+            <div class="overflow-x-auto rounded-2xl border-2 border-slate-200 shadow-sm">
               <table class="w-full text-left border-collapse bg-white">
                 <thead>
-                  <tr class="bg-slate-800 text-white text-xs uppercase tracking-wider">
-                    <th class="py-3 px-4 font-semibold w-48">評量指標名稱</th>
-                    <th class="py-3 px-3 font-semibold w-24 text-center">配分</th>
-                    <th class="py-3 px-3 font-semibold">優秀 (90-100%)</th>
-                    <th class="py-3 px-3 font-semibold">良好 (75-89%)</th>
-                    <th class="py-3 px-3 font-semibold">基礎 (60-74%)</th>
-                    <th class="py-3 px-3 font-semibold">待加強 (<60%)</th>
-                    <th class="py-3 px-2 font-semibold w-12 text-center">操作</th>
+                  <tr class="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 text-white text-sm sm:text-base">
+                    <th class="py-3.5 px-4 font-extrabold w-52">評量指標名稱</th>
+                    <th class="py-3.5 px-3 font-extrabold w-28 text-center">配分</th>
+                    <th class="py-3.5 px-3 font-extrabold text-emerald-300">優秀 (90-100%)</th>
+                    <th class="py-3.5 px-3 font-extrabold text-sky-300">良好 (75-89%)</th>
+                    <th class="py-3.5 px-3 font-extrabold text-amber-300">基礎 (60-74%)</th>
+                    <th class="py-3.5 px-3 font-extrabold text-rose-300">待加強 (<60%)</th>
+                    <th class="py-3.5 px-2 font-extrabold w-16 text-center">操作</th>
                   </tr>
                 </thead>
-                <tbody id="rubricTableBody" class="divide-y divide-slate-200 text-xs sm:text-sm">
+                <tbody id="rubricTableBody" class="divide-y divide-slate-200 text-sm sm:text-base">
                   <!-- Populated by app.js -->
                 </tbody>
               </table>
@@ -343,115 +347,117 @@
          STEP 3: 提供影片或者影片網址 (單一影片 / 網址 / Excel 批次)
          ========================================== -->
     <section id="panel-step3" class="step-panel hidden space-y-6">
-      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-slate-50/80 to-indigo-50/30">
+      <div class="bg-white/95 rounded-3xl border-2 border-amber-200/90 shadow-lg overflow-hidden">
+        <div class="p-6 sm:p-7 border-b-2 border-amber-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-gradient-to-r from-amber-50 via-orange-50/70 to-teal-50/60">
           <div>
-            <div class="inline-flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs sm:text-sm font-extrabold uppercase tracking-wider mb-2">
               <i data-lucide="video" class="w-4 h-4"></i>
               <span>Step 3 · 影片來源與批次清單</span>
             </div>
-            <h2 class="text-xl font-bold text-slate-900">提供影片檔案、影片網址，或上傳 Excel 批次清單</h2>
-            <p class="text-sm text-slate-600 mt-0.5">您可以上傳<strong class="text-slate-800">單一影片檔</strong>、貼上<strong class="text-slate-800">單一影片網址</strong>，或上傳含有「<strong class="text-slate-800">序號</strong>」及「<strong class="text-slate-800">網址</strong>」的 <strong class="text-slate-800">Excel 檔 (.xlsx / .xls / .csv)</strong> 進行批次評分。</p>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">提供影片檔案、影片網址，或上傳 Excel 批次清單</h2>
+            <p class="text-base sm:text-lg font-medium text-slate-700 mt-1">
+              您可以上傳<strong class="text-orange-700">單一影片檔</strong>、貼上<strong class="text-orange-700">單一影片網址</strong>，或上傳含有「<strong class="text-teal-700">序號</strong>」及「<strong class="text-teal-700">網址</strong>」的 <strong class="text-teal-700">Excel 檔 (.xlsx / .xls / .csv)</strong> 進行批次評分。
+            </p>
           </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <button type="button" id="btnDownloadSampleExcel" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition cursor-pointer">
-              <i data-lucide="download" class="w-3.5 h-3.5 text-indigo-600"></i>
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <button type="button" id="btnDownloadSampleExcel" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm sm:text-base font-bold text-slate-800 bg-white hover:bg-slate-50 border-2 border-slate-300 shadow-2xs transition cursor-pointer">
+              <i data-lucide="download" class="w-4 h-4 text-teal-600"></i>
               <span>下載 Excel 範本檔</span>
             </button>
-            <button type="button" id="btnAddDemoVideos" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/60 transition cursor-pointer">
-              <i data-lucide="list-plus" class="w-3.5 h-3.5"></i>
+            <button type="button" id="btnAddDemoVideos" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm sm:text-base font-bold text-orange-800 bg-amber-100 hover:bg-amber-200 border-2 border-amber-300 transition cursor-pointer">
+              <i data-lucide="list-plus" class="w-4 h-4 text-orange-600"></i>
               <span>載入測試影片清單</span>
             </button>
-            <button type="button" onclick="switchTab('step4')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer">
+            <button type="button" onclick="switchTab('step4')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm sm:text-base font-bold text-white bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 shadow-md transition cursor-pointer">
               <span>前往評分結果</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
             </button>
           </div>
         </div>
 
-        <div class="p-6 space-y-6">
+        <div class="p-6 sm:p-7 space-y-7">
           <!-- Three Input Methods Grid -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             <!-- Method A: Single Video URL -->
-            <div class="rounded-2xl border border-slate-200 p-5 bg-slate-50/40 flex flex-col justify-between">
+            <div class="rounded-3xl border-2 border-orange-200 p-6 bg-gradient-to-b from-orange-50/60 to-white flex flex-col justify-between shadow-xs">
               <div>
-                <div class="flex items-center gap-2.5 mb-3">
-                  <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                    <i data-lucide="link" class="w-5 h-5"></i>
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-11 h-11 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
+                    <i data-lucide="link" class="w-6 h-6"></i>
                   </div>
                   <div>
-                    <h3 class="text-sm font-bold text-slate-900">方式 A：新增影片網址</h3>
-                    <p class="text-xs text-slate-500">YouTube、Google Drive 或直連影片網址</p>
+                    <h3 class="text-lg font-extrabold text-slate-900">方式 A：新增影片網址</h3>
+                    <p class="text-sm font-medium text-slate-600">YouTube、雲端硬碟或直連網址</p>
                   </div>
                 </div>
-                <div class="space-y-2.5">
+                <div class="space-y-3">
                   <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">序號 / 學生姓名或組別 (選填)</label>
-                    <input id="inputSingleId" type="text" placeholder="例如：1 或 A01 王小明" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-bold text-slate-800 mb-1">序號 / 學生姓名或組別 (選填)</label>
+                    <input id="inputSingleId" type="text" placeholder="例如：1 或 A01 王小明" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">影片網址 (URL) *</label>
-                    <input id="inputSingleUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-bold text-slate-800 mb-1">影片網址 (URL) *</label>
+                    <input id="inputSingleUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">作品摘要 / 備註說明 (選填，輔助 AI 評分)</label>
-                    <input id="inputSingleNote" type="text" placeholder="例如：片長1分45秒，含3位朋友家人訪談..." class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-sm font-bold text-slate-800 mb-1">作品摘要 / 備註說明 (選填)</label>
+                    <input id="inputSingleNote" type="text" placeholder="例如：片長1分45秒，含3位親友訪談..." class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-200 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-500">
                   </div>
                 </div>
               </div>
-              <button type="button" id="btnAddSingleUrl" class="mt-4 w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer">
-                <i data-lucide="plus" class="w-4 h-4"></i>
+              <button type="button" id="btnAddSingleUrl" class="mt-5 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-base font-extrabold text-white bg-orange-500 hover:bg-orange-600 shadow-sm transition cursor-pointer">
+                <i data-lucide="plus" class="w-5 h-5"></i>
                 <span>加入待評分清單</span>
               </button>
             </div>
 
             <!-- Method B: Upload Video File -->
-            <div class="rounded-2xl border border-slate-200 p-5 bg-slate-50/40 flex flex-col justify-between">
+            <div class="rounded-3xl border-2 border-sky-200 p-6 bg-gradient-to-b from-sky-50/60 to-white flex flex-col justify-between shadow-xs">
               <div>
-                <div class="flex items-center gap-2.5 mb-3">
-                  <div class="w-9 h-9 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center">
-                    <i data-lucide="film" class="w-5 h-5"></i>
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-11 h-11 rounded-2xl bg-sky-500 text-white flex items-center justify-center shadow-xs">
+                    <i data-lucide="film" class="w-6 h-6"></i>
                   </div>
                   <div>
-                    <h3 class="text-sm font-bold text-slate-900">方式 B：上傳影片檔案</h3>
-                    <p class="text-xs text-slate-500">支援 MP4、WebM、MOV 等影片格式</p>
+                    <h3 class="text-lg font-extrabold text-slate-900">方式 B：上傳影片檔案</h3>
+                    <p class="text-sm font-medium text-slate-600">支援 MP4、WebM、MOV 等影片格式</p>
                   </div>
                 </div>
-                <label for="inputVideoFile" class="group flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 hover:border-violet-500 rounded-xl bg-white hover:bg-violet-50/20 transition cursor-pointer text-center min-h-[152px]">
+                <label for="inputVideoFile" class="group flex flex-col items-center justify-center p-6 border-3 border-dashed border-sky-300 hover:border-sky-500 rounded-2xl bg-white hover:bg-sky-50/40 transition cursor-pointer text-center min-h-[180px]">
                   <input id="inputVideoFile" type="file" accept="video/*" multiple class="sr-only">
-                  <i data-lucide="file-video" class="w-8 h-8 text-violet-500 mb-2 group-hover:scale-110 transition-transform"></i>
-                  <span class="text-xs font-bold text-slate-700">點擊選擇一部或多部影片檔</span>
-                  <span class="text-[11px] text-slate-400 mt-1">自動偵測影片片長、畫質並擷取關鍵畫面供 AI 評分</span>
+                  <i data-lucide="file-video" class="w-10 h-10 text-sky-500 mb-2.5 group-hover:scale-110 transition-transform"></i>
+                  <span class="text-base font-extrabold text-slate-800">點擊選擇一部或多部影片檔</span>
+                  <span class="text-sm font-medium text-slate-500 mt-1.5">自動偵測影片片長、畫質並擷取關鍵畫面供 AI 評分</span>
                 </label>
               </div>
-              <div class="mt-3 text-[11px] text-slate-500 flex items-center gap-1.5">
-                <i data-lucide="info" class="w-3.5 h-3.5 text-violet-500 shrink-0"></i>
-                <span>上傳本機影片將自動讀取秒數並檢核是否符合 90~120 秒規範。</span>
+              <div class="mt-4 text-sm font-medium text-slate-600 flex items-center gap-2">
+                <i data-lucide="info" class="w-4 h-4 text-sky-600 shrink-0"></i>
+                <span>自動讀取影片秒數並檢核是否符合 90~120 秒規範。</span>
               </div>
             </div>
 
             <!-- Method C: Upload Excel Batch List -->
-            <div class="rounded-2xl border border-slate-200 p-5 bg-slate-50/40 flex flex-col justify-between">
+            <div class="rounded-3xl border-2 border-teal-200 p-6 bg-gradient-to-b from-teal-50/60 to-white flex flex-col justify-between shadow-xs">
               <div>
-                <div class="flex items-center gap-2.5 mb-3">
-                  <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                    <i data-lucide="sheet" class="w-5 h-5"></i>
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-11 h-11 rounded-2xl bg-teal-600 text-white flex items-center justify-center shadow-xs">
+                    <i data-lucide="sheet" class="w-6 h-6"></i>
                   </div>
                   <div>
-                    <h3 class="text-sm font-bold text-slate-900">方式 C：上傳 Excel 批次清單</h3>
-                    <p class="text-xs text-slate-500">內含「序號」與「網址」欄位的 Excel 檔</p>
+                    <h3 class="text-lg font-extrabold text-slate-900">方式 C：上傳 Excel 批次清單</h3>
+                    <p class="text-sm font-medium text-slate-600">內含「序號」與「網址」欄位的 Excel 檔</p>
                   </div>
                 </div>
-                <label for="inputExcelBatch" class="group flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-xl bg-white hover:bg-emerald-50/20 transition cursor-pointer text-center min-h-[152px]">
+                <label for="inputExcelBatch" class="group flex flex-col items-center justify-center p-6 border-3 border-dashed border-teal-300 hover:border-teal-500 rounded-2xl bg-white hover:bg-teal-50/40 transition cursor-pointer text-center min-h-[180px]">
                   <input id="inputExcelBatch" type="file" accept=".xlsx,.xls,.csv" class="sr-only">
-                  <i data-lucide="file-spreadsheet" class="w-8 h-8 text-emerald-600 mb-2 group-hover:scale-110 transition-transform"></i>
-                  <span class="text-xs font-bold text-slate-700">點擊上傳 Excel (.xlsx / .xls / .csv)</span>
-                  <span class="text-[11px] text-slate-400 mt-1">自動辨識「序號 / 編號 / 學號」與「網址 / URL / 連結」欄位</span>
+                  <i data-lucide="file-spreadsheet" class="w-10 h-10 text-teal-600 mb-2.5 group-hover:scale-110 transition-transform"></i>
+                  <span class="text-base font-extrabold text-slate-800">點擊上傳 Excel (.xlsx / .xls / .csv)</span>
+                  <span class="text-sm font-medium text-slate-500 mt-1.5">自動辨識「序號 / 編號 / 學號」與「網址 / URL / 連結」欄位</span>
                 </label>
               </div>
-              <div class="mt-3 text-[11px] text-slate-500 flex items-center gap-1.5">
-                <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+              <div class="mt-4 text-sm font-medium text-slate-600 flex items-center gap-2">
+                <i data-lucide="check-check" class="w-4 h-4 text-teal-600 shrink-0"></i>
                 <span>支援選填「備註/作品說明/姓名」欄位，一併匯入評分列表。</span>
               </div>
             </div>
@@ -459,39 +465,39 @@
           </div>
 
           <!-- Video Queue Table -->
-          <div class="space-y-3">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                <i data-lucide="list-video" class="w-4 h-4 text-indigo-600"></i>
+          <div class="space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <h3 class="text-xl font-black text-slate-900 flex items-center gap-2.5">
+                <i data-lucide="list-video" class="w-6 h-6 text-orange-600"></i>
                 <span>待評分影片清單</span>
-                <span id="videoCountLabel" class="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700">0 筆</span>
+                <span id="videoCountLabel" class="px-3 py-0.5 rounded-full text-sm font-extrabold bg-orange-100 text-orange-800 border border-orange-300">3 筆</span>
               </h3>
-              <div class="flex items-center gap-2">
-                <button type="button" id="btnClearVideos" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200/60 transition cursor-pointer">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              <div class="flex items-center gap-3">
+                <button type="button" id="btnClearVideos" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm sm:text-base font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border-2 border-rose-200 transition cursor-pointer">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
                   <span>清空清單</span>
                 </button>
-                <button type="button" id="btnStartGradingFromStep3" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 shadow-sm transition cursor-pointer">
-                  <i data-lucide="play" class="w-4 h-4"></i>
+                <button type="button" id="btnStartGradingFromStep3" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm sm:text-base font-extrabold text-white bg-gradient-to-r from-orange-500 via-rose-500 to-amber-500 hover:from-orange-600 hover:to-rose-600 shadow-md transition cursor-pointer">
+                  <i data-lucide="play" class="w-5 h-5"></i>
                   <span>開始執行全部評分</span>
                 </button>
               </div>
             </div>
 
-            <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-2xs bg-white">
+            <div class="overflow-x-auto rounded-2xl border-2 border-slate-200 shadow-xs bg-white">
               <table class="w-full text-left border-collapse">
                 <thead>
-                  <tr class="bg-slate-100/90 text-slate-700 text-xs uppercase border-b border-slate-200">
-                    <th class="py-3 px-4 font-bold w-24">序號</th>
-                    <th class="py-3 px-4 font-bold w-28">來源類型</th>
-                    <th class="py-3 px-4 font-bold">影片網址 / 檔案名稱</th>
-                    <th class="py-3 px-4 font-bold w-28">偵測片長</th>
-                    <th class="py-3 px-4 font-bold">作品內容補充 / 觀察重點 (可編輯)</th>
-                    <th class="py-3 px-4 font-bold w-28 text-center">狀態</th>
-                    <th class="py-3 px-3 font-bold w-24 text-center">操作</th>
+                  <tr class="bg-slate-800 text-white text-sm sm:text-base border-b border-slate-300">
+                    <th class="py-3.5 px-4 font-extrabold w-24">序號</th>
+                    <th class="py-3.5 px-4 font-extrabold w-32">來源類型</th>
+                    <th class="py-3.5 px-4 font-extrabold">影片網址 / 檔案名稱</th>
+                    <th class="py-3.5 px-4 font-extrabold w-32">偵測片長</th>
+                    <th class="py-3.5 px-4 font-extrabold">作品內容補充 / 觀察重點 (可編輯)</th>
+                    <th class="py-3.5 px-4 font-extrabold w-32 text-center">狀態</th>
+                    <th class="py-3.5 px-3 font-extrabold w-28 text-center">操作</th>
                   </tr>
                 </thead>
-                <tbody id="videoQueueBody" class="divide-y divide-slate-200 text-sm">
+                <tbody id="videoQueueBody" class="divide-y divide-slate-200 text-base">
                   <!-- Populated by app.js -->
                 </tbody>
               </table>
@@ -506,57 +512,59 @@
          STEP 4: 評分結果與匯出 Excel
          ========================================== -->
     <section id="panel-step4" class="step-panel hidden space-y-6">
-      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+      <div class="bg-white/95 rounded-3xl border-2 border-amber-200/90 shadow-lg overflow-hidden">
         <!-- Header Bar -->
-        <div class="p-6 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-gradient-to-r from-slate-50/80 to-indigo-50/30">
+        <div class="p-6 sm:p-7 border-b-2 border-amber-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-gradient-to-r from-amber-50 via-orange-50/70 to-teal-50/60">
           <div>
-            <div class="inline-flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs sm:text-sm font-extrabold uppercase tracking-wider mb-2">
               <i data-lucide="award" class="w-4 h-4"></i>
               <span>Step 4 · 評分結果與報表下載</span>
             </div>
-            <h2 class="text-xl font-bold text-slate-900">Rubrics 分項評分結果、總分與綜合評語</h2>
-            <p class="text-sm text-slate-600 mt-0.5">點擊單筆可檢視或微調各項指標分數與評語，確認無誤後可一鍵下載完整 <strong class="text-emerald-700">Excel (.xlsx) 評分報表</strong>。</p>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Rubrics 分項評分結果、總分與綜合評語</h2>
+            <p class="text-base sm:text-lg font-medium text-slate-700 mt-1">
+              點擊單筆可檢視或微調各項指標分數與評語，確認無誤後可一鍵下載完整 <strong class="text-teal-700 underline decoration-teal-300 decoration-2">Excel (.xlsx) 評分報表</strong>。
+            </p>
           </div>
-          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
-            <button type="button" id="btnRunBatchGrading" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition cursor-pointer">
-              <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <button type="button" id="btnRunBatchGrading" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-base font-extrabold text-white bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 shadow-md transition cursor-pointer">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
               <span>依 Rubrics 執行 AI 評分</span>
             </button>
-            <button type="button" id="btnExportExcel" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition cursor-pointer">
-              <i data-lucide="file-down" class="w-4 h-4"></i>
+            <button type="button" id="btnExportExcel" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-base font-extrabold text-white bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-md transition cursor-pointer">
+              <i data-lucide="file-down" class="w-5 h-5"></i>
               <span>下載評分結果 Excel (.xlsx)</span>
             </button>
           </div>
         </div>
 
         <!-- Summary KPI Cards -->
-        <div class="px-6 pt-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
-            <p class="text-xs font-semibold text-slate-500">影片總數</p>
-            <p id="statTotalVideos" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+        <div class="px-6 sm:px-7 pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="p-5 rounded-2xl bg-amber-50/80 border-2 border-amber-200">
+            <p class="text-sm sm:text-base font-bold text-slate-600">影片總數</p>
+            <p id="statTotalVideos" class="text-3xl font-black text-slate-900 mt-1">0</p>
           </div>
-          <div class="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-100">
-            <p class="text-xs font-semibold text-indigo-600">已完成評分</p>
-            <p id="statGradedCount" class="text-2xl font-extrabold text-indigo-900 mt-1">0</p>
+          <div class="p-5 rounded-2xl bg-orange-50/80 border-2 border-orange-200">
+            <p class="text-sm sm:text-base font-bold text-orange-700">已完成評分</p>
+            <p id="statGradedCount" class="text-3xl font-black text-orange-900 mt-1">0</p>
           </div>
-          <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100">
-            <p class="text-xs font-semibold text-emerald-700">平均總分</p>
-            <p id="statAverageScore" class="text-2xl font-extrabold text-emerald-900 mt-1">--</p>
+          <div class="p-5 rounded-2xl bg-emerald-50/80 border-2 border-emerald-200">
+            <p class="text-sm sm:text-base font-bold text-emerald-800">平均總分</p>
+            <p id="statAverageScore" class="text-3xl font-black text-emerald-900 mt-1">--</p>
           </div>
-          <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-100">
-            <p class="text-xs font-semibold text-amber-700">最高 / 最低分</p>
-            <p id="statHighLowScore" class="text-2xl font-extrabold text-amber-900 mt-1">-- / --</p>
+          <div class="p-5 rounded-2xl bg-sky-50/80 border-2 border-sky-200">
+            <p class="text-sm sm:text-base font-bold text-sky-800">最高 / 最低分</p>
+            <p id="statHighLowScore" class="text-3xl font-black text-sky-900 mt-1">-- / --</p>
           </div>
         </div>
 
         <!-- Results Table -->
-        <div class="p-6 space-y-4">
-          <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-2xs">
+        <div class="p-6 sm:p-7 space-y-4">
+          <div class="overflow-x-auto rounded-2xl border-2 border-slate-200 shadow-sm">
             <table class="w-full text-left border-collapse bg-white">
               <thead id="resultsTableHead">
                 <!-- Dynamically built based on Rubric Criteria -->
               </thead>
-              <tbody id="resultsTableBody" class="divide-y divide-slate-200 text-sm">
+              <tbody id="resultsTableBody" class="divide-y divide-slate-200 text-base">
                 <!-- Populated by app.js -->
               </tbody>
             </table>
@@ -569,27 +577,27 @@
 
   <!-- Detailed Grading & Video Preview Drawer / Modal -->
   <div id="detailModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden my-auto">
-      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border-2 border-amber-200 overflow-hidden my-auto">
+      <div class="px-6 py-4 bg-gradient-to-r from-orange-600 via-rose-600 to-teal-600 text-white flex items-center justify-between">
         <div class="flex items-center gap-2.5">
-          <i data-lucide="Clipboard-check" class="w-5 h-5 text-indigo-400"></i>
-          <h3 id="detailModalTitle" class="text-base font-bold">影片詳細評分與預覽</h3>
+          <i data-lucide="clipboard-check" class="w-6 h-6 text-amber-200"></i>
+          <h3 id="detailModalTitle" class="text-lg sm:text-xl font-black">影片詳細評分與預覽</h3>
         </div>
-        <button type="button" id="btnCloseDetailModal" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer">
-          <i data-lucide="x" class="w-5 h-5"></i>
+        <button type="button" id="btnCloseDetailModal" class="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer">
+          <i data-lucide="x" class="w-6 h-6"></i>
         </button>
       </div>
       <div id="detailModalBody" class="p-6 overflow-y-auto space-y-5 flex-1">
         <!-- Populated dynamically -->
       </div>
-      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-        <span class="text-xs text-slate-500">修改分數或評語後點擊「儲存評分變更」即可同步更新至總表與 Excel 匯出檔</span>
-        <div class="flex items-center gap-2">
-          <button type="button" id="btnRegradeSingle" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition cursor-pointer">
-            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+      <div class="px-6 py-4 bg-amber-50/70 border-t-2 border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span class="text-sm font-medium text-slate-600">修改分數或評語後點擊「儲存評分變更」即可同步更新至總表與 Excel 匯出檔</span>
+        <div class="flex items-center gap-3">
+          <button type="button" id="btnRegradeSingle" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-orange-800 bg-white hover:bg-amber-100 border-2 border-amber-300 transition cursor-pointer">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             <span>重新執行 AI 評分</span>
           </button>
-          <button type="button" id="btnSaveDetailGrading" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer">
+          <button type="button" id="btnSaveDetailGrading" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-extrabold text-white bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 shadow-sm transition cursor-pointer">
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>儲存評分變更</span>
           </button>
@@ -600,49 +608,49 @@
 
   <!-- Gemini API Key Configuration Modal -->
   <div id="apiModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
-      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border-2 border-amber-200 overflow-hidden">
+      <div class="px-6 py-4 bg-gradient-to-r from-orange-500 to-teal-600 text-white flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <i data-lucide="key-round" class="w-5 h-5 text-indigo-400"></i>
-          <h3 class="text-base font-bold">AI 智慧評分引擎設定</h3>
+          <i data-lucide="key-round" class="w-5 h-5 text-amber-200"></i>
+          <h3 class="text-lg font-black">AI 智慧評分引擎設定</h3>
         </div>
-        <button type="button" id="btnCloseApiModal" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer">
+        <button type="button" id="btnCloseApiModal" class="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
       <div class="p-6 space-y-4">
-        <p class="text-xs text-slate-600 leading-relaxed">
-          本系統支援連結 <strong class="text-slate-900">Google Gemini API</strong> 進行多模態圖檔辨識、影片畫面分析與深度 Rubrics 評分。若未填寫金鑰，系統亦提供內建的<strong class="text-indigo-700">智慧規則與語意分析評分引擎</strong>，確保隨時皆可完成評分與匯出 Excel！
+        <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
+          本系統支援連結 <strong class="text-slate-900">Google Gemini API</strong> 進行多模態圖檔辨識、影片畫面分析與深度 Rubrics 評分。若未填寫金鑰，系統亦提供內建的<strong class="text-orange-700">智慧規則與語意分析評分引擎</strong>，確保隨時皆可完成評分與匯出 Excel！
         </p>
         <div>
-          <label for="inputGeminiKey" class="block text-xs font-bold text-slate-700 mb-1.5">Google Gemini API Key (選填，僅儲存於您的瀏覽器本機)</label>
-          <input id="inputGeminiKey" type="password" placeholder="AIzaSy..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <label for="inputGeminiKey" class="block text-sm font-extrabold text-slate-800 mb-1.5">Google Gemini API Key (選填，僅儲存於您的瀏覽器本機)</label>
+          <input id="inputGeminiKey" type="password" placeholder="AIzaSy..." class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-200 text-base focus:outline-none focus:ring-2 focus:ring-orange-400">
         </div>
         <div>
-          <label for="selectGeminiModel" class="block text-xs font-bold text-slate-700 mb-1.5">AI 模型選擇</label>
-          <select id="selectGeminiModel" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <label for="selectGeminiModel" class="block text-sm font-extrabold text-slate-800 mb-1.5">AI 模型選擇</label>
+          <select id="selectGeminiModel" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-200 text-base font-medium bg-white focus:outline-none focus:ring-2 focus:ring-orange-400">
             <option value="gemini-2.5-flash">gemini-2.5-flash (推薦：速度快、支援多模態視覺)</option>
             <option value="gemini-2.5-pro">gemini-2.5-pro (高階推理評分)</option>
             <option value="gemini-2.0-flash">gemini-2.0-flash</option>
           </select>
         </div>
-        <div class="flex justify-end gap-2 pt-2">
-          <button type="button" id="btnClearApiKey" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">清除金鑰</button>
-          <button type="button" id="btnSaveApiKey" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-xs transition cursor-pointer">儲存設定</button>
+        <div class="flex justify-end gap-2.5 pt-2">
+          <button type="button" id="btnClearApiKey" class="px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer">清除金鑰</button>
+          <button type="button" id="btnSaveApiKey" class="px-5 py-2.5 rounded-xl text-sm font-extrabold text-white bg-orange-500 hover:bg-orange-600 shadow-xs transition cursor-pointer">儲存設定</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200/80 py-4 mt-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+  <footer class="bg-white/80 backdrop-blur-md border-t-2 border-amber-200/70 py-5 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-sm font-semibold text-slate-600 gap-2">
       <p>© 2026 影片評分小幫手 (Video Grading Assistant) · 支援圖檔 / Word / PDF 規範與 Rubrics 解析及 Excel 批次匯出</p>
       <div class="flex items-center gap-4">
-        <span class="inline-flex items-center gap-1 text-slate-600"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i> 瀏覽器端安全處理</span>
+        <span class="inline-flex items-center gap-1.5 text-teal-800 font-bold"><i data-lucide="shield-check" class="w-4 h-4 text-teal-600"></i> 瀏覽器端安全處理</span>
       </div>
     </div>
   </footer>
