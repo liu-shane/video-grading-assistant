@@ -1,0 +1,55 @@
+/* Custom styling & micro-interactions for 影片評分小幫手 */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dragover visual state */
+.drag-over {
+  border-color: #4f46e5 !important;
+  background-color: rgba(238, 242, 255, 0.7) !important;
+  transform: scale(1.005);
+}
+
+/* Step Tab Active States */
+.step-tab.active {
+  border-color: #4f46e5;
+  background-color: #ffffff;
+  box-shadow: 0 4px 14px -3px rgba(79, 70, 229, 0.14);
+}
+
+/* Subtle fade-in animation for panels */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-panel:not(.hidden) {
+  animation: fadeIn 0.2s ease-out;
+}
